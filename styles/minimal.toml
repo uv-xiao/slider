@@ -1,0 +1,55 @@
+[GENERAL]
+default_layout = "title_bullets"
+style_prompt = """
+Global constraints:
+- Prioritize readability (high contrast, clear hierarchy).
+- Use consistent typography and spacing across all slides.
+- Avoid visual clutter; prefer simple shapes and whitespace.
+
+Minimal theme:
+- Background: white or near-white.
+- Text: near-black (#111–#222), one sans-serif font family.
+- Accents: a single muted accent color for highlights and rules.
+- Use subtle dividers and consistent margins.
+"""
+
+[layouts.title_only]
+layout_description = """
+Title-only slide with generous whitespace.
+"""
+style_prompt = """
+Place title either centered or top-left. No body text.
+"""
+
+[layouts.title_bullets]
+layout_description = """
+Title + 1–6 bullets.
+"""
+style_prompt = """
+Use a clear hierarchy: title, then bullet list with comfortable line spacing.
+"""
+
+[layouts.two_column_bullets]
+layout_description = """
+Title + bullets split into 2 columns (for bullet-heavy slides).
+"""
+style_prompt = """
+Balance columns and align to a consistent baseline; avoid cramped text.
+"""
+
+[layouts.image_left_text_right]
+layout_description = """
+Image on the left, text (bullets/body) on the right.
+"""
+style_prompt = """
+Keep image prominent; add short caption only if provided.
+"""
+
+[layouts.image_full_bleed_caption]
+layout_description = """
+Full-bleed image with a short caption.
+"""
+style_prompt = """
+Ensure caption remains readable via subtle overlay or high-contrast placement.
+"""
+

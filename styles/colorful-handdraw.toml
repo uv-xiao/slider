@@ -1,0 +1,230 @@
+[GENERAL]
+default_layout = "title_infographic"
+style_prompt = """
+Global constraints:
+- Background: White grid/graph paper pattern (notebook paper style with faint gray grid lines forming a subtle square pattern)
+- Typography: Hand-drawn style bold fonts for headers, clean sans-serif for body text
+- Bilingual titles: Chinese (primary) + English (secondary/subtitle)
+- Illustrations: Simple hand-drawn stick figures positioned at corners or bottom of slides, holding pointers/sticks, with cute friendly expressions
+
+Color Palette (strictly follow):
+- Primary Blue: #4285F4 (for SKILL-related elements)
+- Primary Green: #34A853 (for MCP-related elements)  
+- Primary Orange: #FB8C00 (for PROMPT-related elements)
+- Primary Red: #EA4335 (for warnings, highlights, emphasis)
+- Black: #000000 (for all outlines, text, borders)
+- White: #FFFFFF (for container backgrounds)
+- Light fills: Use pastel versions of primary colors for container backgrounds (light blue, light green, light orange)
+
+Visual Elements:
+- Containers: Hand-drawn rectangular boxes with rounded corners, thick black outlines (3-4px)
+- 3D Effects: Stacked boxes/cubes with isometric perspective, light shading on sides
+- Connectors: Hand-drawn arrows (curved and straight), thick black lines with arrowheads
+- Emphasis: Hand-drawn circles around important text, stars (★★★) for ratings, checkmarks ✓ (green) and X marks ✗ (red)
+- Speech bubbles: Oval or rounded rectangles with tail pointing to speaker, red outline, for key takeaways
+- Icons: Simple line icons inside colored circles or squares
+- Tables: Thick black borders, colored header cells with bold text
+- Underlines: Marker stroke style underlines for emphasis
+
+Layout Principles:
+- Generous margins around all elements
+- Clear visual hierarchy with size variation
+- Color-coded sections (blue/green/orange) for different concepts
+- White space between major sections
+- Bottom-right corner typically reserved for the stick figure presenter
+"""
+
+[layouts.title_infographic]
+layout_description = """
+Title + main infographic content with 3D stacked boxes or layered architecture visualization.
+Use for: Architecture diagrams, layered system explanations, hierarchical data flows.
+"""
+style_prompt = """
+Structure:
+1. Top: Large bilingual title (Chinese bold, English subtitle below)
+2. Center: Main infographic using 3D stacked cubes/boxes showing layers or hierarchy
+   - Each box: Light colored fill (blue/green/orange) with thick black outline
+   - Numbered circles (1, 2, 3) in accent colors for sequence
+   - Arrow connectors between layers (curved, hand-drawn style)
+3. Right side: Status labels in colored text (green checkmarks, red labels)
+4. Bottom: Optional comparison section in outlined box with contrasting examples
+5. Bottom-left corner: Stick figure character holding pointer, with speech bubble containing key takeaway
+
+Color assignment:
+- Layer 1/Meta: Blue (#4285F4)
+- Layer 2/Instruction: Green (#34A853)
+- Layer 3/Resource: Orange (#FB8C00)
+- Emphasis/Warning: Red (#EA4335)
+
+All boxes must have 3D perspective with visible top and side faces, light shading.
+"""
+
+[layouts.three_column_comparison]
+layout_description = """
+Side-by-side comparison of 3 items with colored headers and feature breakdown.
+Use for: Comparing 3 concepts, products, or approaches horizontally.
+"""
+style_prompt = """
+Structure:
+1. Top: Bilingual title
+2. Main area: 3 equal-width columns side by side
+   - Each column has colored header bar at top (Blue for column 1, Green for column 2, Orange for column 3)
+   - Header contains: Icon + Bold title text (Chinese + English)
+   - Body: Light tinted background, contains:
+     * Definition/Nature sections with underlined headers
+     * Analogies in pill-shaped tags
+     * Icons representing concepts (folder, USB, speech bubble)
+3. Curved arrows connecting columns (black, hand-drawn) showing relationships
+4. Bottom: Speech bubble with concluding statement, stick figure pointing
+
+Column styling:
+- Thick colored borders matching header
+- Rounded corners (10-15px radius)
+- Comfortable padding inside
+- Bullet points with simple icons
+"""
+
+[layouts.vertical_flow_diagram]
+layout_description = """
+Stacked 3D boxes showing hierarchical flow or progressive steps.
+Use for: Step-by-step processes, loading mechanisms, disclosure patterns.
+"""
+style_prompt = """
+Structure:
+1. Top: Bilingual title with question subtitle in red (e.g., "为什么Token消耗极低？")
+2. Center: 3 vertically stacked 3D boxes, slightly overlapping
+   - Each box: Isometric 3D cube appearance with depth
+   - Top surface shows diagonal hatching pattern
+   - Side surface shows gradient shading
+   - Front face contains bullet points
+3. Left side: Numbered labels (① ② ③) with category names
+4. Right side: Status indicators with colored text and arrows
+   - Green checkmark for "Always Loaded"
+   - Orange arrow for "On-demand"
+   - Red arrow for "Referenced"
+5. Box connectors: Large curved arrows on left side between boxes
+6. Bottom: Comparison section with two contrasting examples side by side
+7. Bottom-left: Stick figure with speech bubble emphasizing key advantage
+
+Box dimensions:
+- Width: 60% of slide width
+- Height: Proportional for 3 boxes to fit
+- Depth perspective: 15-20 degrees
+"""
+
+[layouts.decision_tree]
+layout_description = """
+Flow chart with diamond decision nodes and directional arrows showing decision paths.
+Use for: Decision guides, selection workflows, "which to choose" scenarios.
+"""
+style_prompt = """
+Structure:
+1. Top: Bilingual title
+2. Flow diagram (top-down layout):
+   - Start node: Rounded oval with red outline, "开始 START" label
+   - Diamond decision nodes: Rotated 45° squares with thick borders (blue or orange)
+     * YES/NO labels in green/red on arrow paths
+   - Result boxes: Rounded rectangles with thick colored borders
+     * Orange border for PROMPT result
+     * Blue border for SKILL result
+     * Green border for MCP result
+   - Arrows: Thick black lines with arrowheads, curved paths
+3. Each result box contains:
+   - Bold title: "使用 XXX"
+   - Checkmark bullet points
+   - Example in smaller text at bottom
+4. Bottom section: "组合使用 Combination" with 3 boxes (orange+blue+green) showing integration
+5. Bottom: Stick figure with red speech bubble containing conclusion
+
+Decision node styling:
+- Diamond shape with 60px height
+- Thick colored border (3px)
+- Light tinted fill
+- Question text inside, bilingual
+"""
+
+[layouts.venn_diagram]
+layout_description = """
+Three overlapping circles showing relationships between concepts plus case study workflow.
+Use for: Concept relationship visualization, synergy explanations, workflow integrations.
+"""
+style_prompt = """
+Structure:
+1. Top: Bilingual title
+2. Three horizontal definition bars:
+   - Orange bar: PROMPT definition with speech bubble icon
+   - Blue bar: SKILL definition with book/document icon
+   - Green bar: MCP definition with plug/socket icon
+3. Center: Venn diagram with 3 overlapping circles
+   - Orange circle (left): PROMPT
+   - Blue circle (right): SKILL
+   - Green circle (bottom): MCP
+   - Center overlap: "互补而非竞争" (Complementary, not competitive)
+   - Arrows pointing outward to use cases:
+     * Orange arrow: "一次性指令" (One-time instruction)
+     * Blue arrow: "重复工作手册" (Repetitive work manual)
+     * Green arrow: "访问外部工具" (Access external tools)
+4. Bottom: "实战案例 Case Study" section with vertical workflow
+   - Sequential boxes: PROMPT → SKILL → MCP → SKILL → SKILL → Output
+   - Arrows between steps
+   - Small icons next to relevant steps
+5. Bottom banner: Red outlined box with key insight in Chinese
+6. Left side: Stick figure character pointing to diagram
+
+Circle styling:
+- Thick colored outlines (4px)
+- Transparent/semi-transparent fills
+- Clear overlap regions with mixed colors
+- Labels positioned at circle edges
+"""
+
+[layouts.comparison_table]
+layout_description = """
+Multi-row table with feature comparisons across 3 columns, using icons and ratings.
+Use for: Feature comparison matrices, capability assessments, platform comparisons.
+"""
+style_prompt = """
+Structure:
+1. Top: Bilingual title with part indicator (e.g., "技术特性对比 (2/2)")
+2. Main table: 3 columns × 4+ rows
+   - Header row: Column titles in colored text (Blue, Green, Orange)
+   - Row labels (leftmost): Feature names in bold black text
+   - Cells: Content varies by row type:
+     * Rating rows: Colored text (低/高/强/弱) + star ratings (★★★)
+     * Icon rows: Simple line icons in center
+     * Text rows: Brief descriptions with emoticons
+3. Row styling alternates:
+   - Border: Thick black lines between all cells
+   - Each cell has rounded corners
+   - Colored headers for each column section
+4. Bottom: "关键差异 Key Differences" summary box
+   - Red border, light background
+   - Bullet points summarizing main takeaways
+5. Right side: Stick figure holding pointer
+
+Table styling:
+- Grid lines: 2-3px black
+- Header backgrounds: Light blue/green/orange
+- Cell padding: Generous, comfortable spacing
+- Icons: 40-50px size, centered
+"""
+
+[layouts.title_only]
+layout_description = """
+Title-only slide with generous whitespace, used for section breaks or chapter titles.
+Use for: Opening slides, section dividers, chapter transitions.
+"""
+style_prompt = """
+Structure:
+1. Center or upper-center: Large bilingual title
+   - Chinese: Very large, bold, hand-drawn style
+   - English: Medium size, below Chinese, regular weight
+2. Subtle grid background visible
+3. Optional: Small decorative element (mini stick figure or icon) in corner
+4. Ample whitespace (60% of slide)
+
+Typography:
+- Chinese title: 48-60pt equivalent
+- English subtitle: 24-30pt equivalent
+- Black text on white grid background
+"""

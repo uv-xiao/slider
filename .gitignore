@@ -1,0 +1,20 @@
+# Local style references (images/pdfs) and generated artifacts
+references/**
+!references/README.md
+
+artifacts/**
+!artifacts/README.md
+
+prompts/generated/**
+!prompts/generated/README.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+dist/
+build/
+.pytest_cache/
+.coverage
+
