@@ -1,0 +1,21 @@
+[GENERAL]
+style_prompt = """
+Global constraints:
+- Prioritize readability (high contrast, clear hierarchy).
+- Use consistent typography and spacing across all slides.
+- Keep visuals purposeful; avoid decorative clutter.
+
+Minimal theme:
+- Background: white or near-white.
+- Text: near-black (#111–#222), one sans-serif font family.
+- Accents: a single muted accent color for highlights and rules.
+- Simple icons/illustrations only when they clarify meaning.
+"""
+
+[TOKENS]
+background = "#FFFFFF"
+text = "#111111"
+accent = "#4C6FFF"
+stroke_width = "3px"
+corner_radius = "12px"
+
