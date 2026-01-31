@@ -39,7 +39,7 @@ If the user wants an installed CLI, install once then use `slider ...`:
   - Provide overrides via files: `--description @desc.txt --prompt @prompt.txt`
 - Delete a layout: `python3 .codex/skills/slider-ops/scripts/slider_ops.py layouts delete minimal title_bullets`
 
-When the user wants “a new style from references”, first inspect `references/<style>/` (gitignored) and summarize the visual constraints into `[GENERAL].style_prompt`, then create the style file and add/update its layouts.
+When the user wants "a new style from references", first inspect `references/<style>/` (gitignored) and summarize the visual constraints into `[GENERAL].style_prompt`, then create the style file and add/update its layouts.
 
 ### Specs (Markdown)
 
@@ -52,8 +52,29 @@ When the user wants “a new style from references”, first inspect `references
 - Render per-slide prompts:
   - `python3 .codex/skills/slider-ops/scripts/slider_ops.py prompts render --spec specs/mydeck.md --style minimal --out prompts/generated/mydeck.md`
 
+## Scope of Work (What to Delegate)
+
+As the slider-ops skill owner, you handle:
+
+**Operations (routine tasks):**
+- Managing styles: create, update, delete, clone styles in `styles/*.toml`
+- Managing layouts: add, update, delete layout entries under `[layouts.*]`
+- Spec scaffolding: create starter specs in `specs/*.md`
+- Prompt rendering: generate per-slide prompts in `prompts/generated/*.md`
+- Artifact generation: produce final outputs in `artifacts/`
+- Reference analysis: extract visual styles from `references/<style>/`
+
+**Feature Evolution (repo improvements):**
+- Extending the style TOML schema (new fields, new sections)
+- Adding new CLI commands or subcommands to the slider tool
+- Modifying the prompt rendering engine or workflow logic
+- Adding support for new output formats or generators
+- Refactoring the codebase for better modularity or performance
+
+External agents (e.g., Kimi Code) should delegate **ALL** of the above to you via `$slider-ops`.
+
 ## Guardrails
 
 - Prefer writing generated files into `prompts/generated/` and artifacts into `artifacts/` (both gitignored).
 - If you change `styles/*.toml`, keep style names stable (they are referenced by name in prompts).
-- If a user asks for “just do it”, run the commands and update the repo; do not ask them to run `slider` themselves.
+- If a user asks for "just do it", run the commands and update the repo; do not ask them to run `slider` themselves.

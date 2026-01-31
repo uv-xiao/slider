@@ -190,6 +190,34 @@ def cmd_styles_delete(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_styles_evolve(args: argparse.Namespace) -> int:
+    repo_root = _find_repo_root(Path(__file__).resolve())
+    _ensure_imports(repo_root)
+
+    from slider.style_evolve import evolve_style_file
+
+    style_path = _style_file(repo_root, args.styles_dir, args.style)
+    if not style_path.exists():
+        raise FileNotFoundError(f"Style file not found: {style_path}")
+
+    result = evolve_style_file(
+        style_path=style_path,
+        styles_dir=_styles_dir(repo_root, args.styles_dir),
+        target=args.target,
+        out_path=None,
+        dry_run=bool(args.dry_run),
+    )
+
+    if args.dry_run:
+        if result.added_layouts:
+            for name in result.added_layouts:
+                print(name)
+        return 0
+
+    print(str(result.out_path))
+    return 0
+
+
 def cmd_layouts_list(args: argparse.Namespace) -> int:
     repo_root = _find_repo_root(Path(__file__).resolve())
     style_path = _style_file(repo_root, args.styles_dir, args.style)
@@ -329,6 +357,17 @@ def build_parser() -> argparse.ArgumentParser:
     p_delete.add_argument("style", help="Style name")
     p_delete.set_defaults(func=cmd_styles_delete)
 
+    p_evolve = sub_styles.add_parser("evolve", help="Add missing layouts to a style (canonical or union)")
+    p_evolve.add_argument("style", help="Style name")
+    p_evolve.add_argument(
+        "--target",
+        default="canonical",
+        choices=["canonical", "all"],
+        help="Which layouts to ensure exist (default: canonical)",
+    )
+    p_evolve.add_argument("--dry-run", action="store_true", help="Print missing layout names, do not write")
+    p_evolve.set_defaults(func=cmd_styles_evolve)
+
     p_layouts = sub.add_parser("layouts", help="Layout operations inside a style file")
     sub_layouts = p_layouts.add_subparsers(dest="layouts_cmd", required=True)
 
@@ -379,4 +418,3 @@ def main(argv: Optional[list[str]] = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
