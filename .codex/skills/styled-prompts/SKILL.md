@@ -19,6 +19,7 @@ Turn `prompts/content/<deck>.md` into `prompts/styled/<deck>.md` by applying a *
 - `prompts/content/<deck>.md`
 - `styles/<style>.toml` (treat `[GENERAL].style_prompt` as the source of truth for visual identity)
 - Optional: additional references under `references/<style>/` (gitignored)
+- Optional: deck preferences under `configs/deck.yaml` (audience/language/style/dimensions)
 
 ## Output
 
@@ -68,6 +69,32 @@ See templates and pitfalls:
 - `references/icon-illustration-guide.md`
 - `references/common-pitfalls.md`
 
+## Style system (dimensions + presets)
+
+V2 supports a “dimension” vocabulary (ported from archived v1) to describe style in a reusable way:
+
+- `references/dimensions/presets.md` (preset list)
+- `references/dimensions/texture.md`
+- `references/dimensions/mood.md`
+- `references/dimensions/typography.md`
+- `references/dimensions/density.md`
+
+Preset style briefs live in:
+
+- `references/styles/*.md`
+
+Config schema reference (optional):
+
+- `references/config/preferences-schema.md`
+
+## Configuration precedence (recommended)
+
+When both exist:
+
+1. Per-deck: `configs/deck.yaml` (audience/language/style/dimensions)
+2. Style file: `styles/<style>.toml` (`[GENERAL].style_prompt` + optional `[DIMENSIONS]`/`[TOKENS]`)
+3. Defaults: conservative, readable, balanced density
+
 ## Adding vivid/intuitive visuals (icons, illustrations, tables)
 
 For each slide, prefer at least one “visual anchor” when it improves comprehension:
@@ -107,3 +134,12 @@ Aim for at least one of these per slide when it improves comprehension:
 - **Diagram**: process/architecture/relationship diagrams, explicitly specified
 - **Table**: full data table with highlighted cells + one-line insight
 - **Illustration**: scene metaphor that encodes meaning (not decoration)
+
+## Review gate (required)
+
+Do not proceed to `styled-artifacts` until the styled prompt passes:
+
+- Every slide has an explicit element inventory (bbox + content + style)
+- All “Must include” items from the content prompt are present
+- No illegible density (split instead of shrinking)
+- Icons/illustrations are consistent and meaningful (not decoration)

@@ -38,6 +38,7 @@ Examples:
 ## Where things live
 
 - `materials/`: raw notes/images/source docs
+- `configs/`: v2 deck preferences (audience/language/style/dimensions)
 - `prompts/content/`: per-page content prompts (v2)
 - `prompts/styled/`: per-page styled prompts (v2; used for image/PDF/PPT generation)
 - `styles/`: style configs (TOML; v2, no fixed layout catalog)

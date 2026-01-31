@@ -1,0 +1,17 @@
+# Deck preferences (v2)
+#
+# See schema:
+# - .codex/skills/styled-prompts/references/config/preferences-schema.md
+
+style: blueprint
+audience: general
+language: auto
+review: true
+
+# Only used when style: custom
+dimensions:
+  texture: clean
+  mood: professional
+  typography: geometric
+  density: balanced
+

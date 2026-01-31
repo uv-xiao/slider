@@ -11,16 +11,11 @@ Generate all artifacts into a per-deck workdir:
 
 - `OPENROUTER_API_KEY=... python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --pdf artifacts/<deck>/<deck>.pdf --pptx artifacts/<deck>/<deck>.pptx`
 
-Regenerate specific slides (after prompt tweaks):
-
-- `OPENROUTER_API_KEY=... python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --skip-existing --regenerate 3,7 --pdf artifacts/<deck>/<deck>.pdf --pptx artifacts/<deck>/<deck>.pptx`
-
 ## Workflow (recommended)
 
 1. Generate slide images into `artifacts/<deck>/work/slides/`.
 2. Assemble PDF/PPTX.
-3. Visually review slide images (do not review PDFs as text).
-4. Fix prompts and regenerate specific slides if needed.
+3. Keep generation cheap: review happens on prompts (content/styled), not on final artifacts.
 
 ## Notes
 
@@ -30,8 +25,4 @@ Regenerate specific slides (after prompt tweaks):
 
 References:
 - `references/consistency-protocol.md`
-- `references/visual-review-workflow.md`
 - `references/pipeline-notes.md`
-
-Optional review helper:
-- Convert a generated PDF to per-slide images: `python3 .codex/skills/styled-artifacts/scripts/pdf_to_images.py artifacts/<deck>/<deck>.pdf artifacts/<deck>/work/review/slide --dpi 150`

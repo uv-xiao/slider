@@ -154,27 +154,6 @@ def _build_slide_prompt(slide: ParsedSlide, global_context: str) -> str:
     return "\n".join(parts).strip() + "\n"
 
 
-def _parse_int_set(value: str) -> set[int]:
-    """
-    Parse comma-separated ints and ranges like:
-      "1,2,5-7"
-    """
-    out: set[int] = set()
-    for part in [p.strip() for p in value.split(",") if p.strip()]:
-        if "-" in part:
-            a, b = [x.strip() for x in part.split("-", 1)]
-            if not a or not b:
-                continue
-            start = int(a)
-            end = int(b)
-            lo, hi = (start, end) if start <= end else (end, start)
-            for i in range(lo, hi + 1):
-                out.add(int(i))
-        else:
-            out.add(int(part))
-    return out
-
-
 def main(argv: Optional[list[str]] = None) -> int:
     p = argparse.ArgumentParser(description="Generate slide images + PDF/PPTX from v2 styled prompts")
     p.add_argument("--prompts", required=True, help="Path to prompts/styled/*.md")
@@ -183,26 +162,6 @@ def main(argv: Optional[list[str]] = None) -> int:
     p.add_argument("--pptx", help="Optional PPTX output path")
     p.add_argument("--api-key", help="OpenRouter API key (or set OPENROUTER_API_KEY / .OPENROUTER_API_KEY)")
     p.add_argument("--no-download", action="store_true", help="Disable downloading http(s) image URLs")
-    p.add_argument(
-        "--skip-existing",
-        action="store_true",
-        help="Skip slide image generation when output PNG already exists (use --regenerate to override).",
-    )
-    p.add_argument(
-        "--only",
-        help="Only generate these slide indices (e.g. '1,3,5-7'). Others are skipped if their PNG exists.",
-    )
-    p.add_argument(
-        "--regenerate",
-        help="Regenerate these slide indices even if PNG exists (e.g. '2,5' or '1-3').",
-    )
-    p.add_argument("--iterations", type=int, default=2, help="Max refinement iterations per slide (default: 2)")
-    p.add_argument(
-        "--quality-threshold",
-        type=float,
-        default=6.5,
-        help="Quality threshold 0-10 (default: 6.5)",
-    )
     args = p.parse_args(argv)
 
     prompts_path = Path(args.prompts)
@@ -239,9 +198,6 @@ def main(argv: Optional[list[str]] = None) -> int:
         print(f"Missing generator script: {gen_script}", file=sys.stderr)
         return 2
 
-    only_indices = _parse_int_set(args.only) if args.only else None
-    regenerate_indices = _parse_int_set(args.regenerate) if args.regenerate else set()
-
     previous_slide: Optional[Path] = None
     slide_images: list[Path] = []
 
@@ -268,42 +224,27 @@ def main(argv: Optional[list[str]] = None) -> int:
         out_name = f"{slide.index:02d}_{_slug(slide.title)}.png"
         out_path = slides_dir / out_name
 
-        if only_indices is not None and slide.index not in only_indices:
-            if out_path.exists():
-                previous_slide = out_path
-                slide_images.append(out_path)
-            continue
+        cmd = [sys.executable, str(gen_script), prompt, "-o", str(out_path)]
+        if args.api_key:
+            cmd.extend(["--api-key", args.api_key])
+        for a in attachments:
+            cmd.extend(["--attach", str(a)])
 
-        should_generate = True
-        if slide.index in regenerate_indices:
-            should_generate = True
-        elif args.skip_existing and out_path.exists():
-            should_generate = False
-
-        if should_generate:
-            cmd = [sys.executable, str(gen_script), prompt, "-o", str(out_path)]
-            cmd.extend(["--iterations", str(int(args.iterations))])
-            cmd.extend(["--quality-threshold", str(float(args.quality_threshold))])
-            if args.api_key:
-                cmd.extend(["--api-key", args.api_key])
+        print("\n" + "=" * 60)
+        print("Generating Slide Image")
+        print("=" * 60)
+        print(f"Slide title: {slide.title}")
+        if attachments:
+            print(f"Attachments: {len(attachments)} file(s)")
             for a in attachments:
-                cmd.extend(["--attach", str(a)])
+                print(f"  - {a}")
+        print(f"Output: {out_path}")
+        print("=" * 60 + "\n")
 
-            print("\n" + "=" * 60)
-            print("Generating Slide Image")
-            print("=" * 60)
-            print(f"Slide title: {slide.title}")
-            if attachments:
-                print(f"Attachments: {len(attachments)} file(s)")
-                for a in attachments:
-                    print(f"  - {a}")
-            print(f"Output: {out_path}")
-            print("=" * 60 + "\n")
-
-            proc = subprocess.run(cmd)
-            if proc.returncode != 0:
-                print("✗ Generation failed. Check review log for details.", file=sys.stderr)
-                return int(proc.returncode)
+        proc = subprocess.run(cmd)
+        if proc.returncode != 0:
+            print("✗ Generation failed.", file=sys.stderr)
+            return int(proc.returncode)
 
         slide_images.append(out_path)
         previous_slide = out_path
@@ -314,15 +255,9 @@ def main(argv: Optional[list[str]] = None) -> int:
         pdf_script = Path(__file__).resolve().parent / "slides_to_pdf.py"
         subprocess.run([sys.executable, str(pdf_script), str(slides_dir), "-o", str(Path(args.pdf))], check=True)
 
-        validate = Path(__file__).resolve().parent / "validate_presentation.py"
-        subprocess.run([sys.executable, str(validate), str(Path(args.pdf))], check=False)
-
     if args.pptx:
         ppt_script = Path(__file__).resolve().parent / "slides_to_pptx.py"
         subprocess.run([sys.executable, str(ppt_script), str(slides_dir), "-o", str(Path(args.pptx))], check=True)
-
-        validate = Path(__file__).resolve().parent / "validate_presentation.py"
-        subprocess.run([sys.executable, str(validate), str(Path(args.pptx))], check=False)
 
     return 0
 

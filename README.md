@@ -36,6 +36,7 @@ Legacy v1 components (slider CLI, layout catalogs, and earlier artifact skills) 
 ## Repo structure
 
 - `materials/`: raw source material (notes, images, scratch docs)
+- `configs/`: v2 deck preferences (audience/language/style/dimensions)
 - `styles/`: style configs (TOML; v2, no fixed layout catalog)
 - `prompts/content/`: per-page content prompts (v2)
 - `prompts/styled/`: per-page styled prompts (v2; input to artifact generation)

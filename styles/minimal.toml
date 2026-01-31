@@ -1,4 +1,5 @@
 [GENERAL]
+style = "minimal"
 style_prompt = """
 Global constraints:
 - Prioritize readability (high contrast, clear hierarchy).
@@ -12,10 +13,15 @@ Minimal theme:
 - Simple icons/illustrations only when they clarify meaning.
 """
 
+[DIMENSIONS]
+texture = "clean"
+mood = "neutral"
+typography = "geometric"
+density = "minimal"
+
 [TOKENS]
 background = "#FFFFFF"
 text = "#111111"
 accent = "#4C6FFF"
 stroke_width = "3px"
 corner_radius = "12px"
-

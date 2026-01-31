@@ -19,6 +19,7 @@ Turn raw material (notes, markdown, images, links) into a **per-page Content PRO
 
 - `materials/<deck>/...` (preferred) or a provided Markdown blob
 - Optional constraints: target audience, target slide count, talk type, time limit
+- Optional: deck preferences under `configs/deck.yaml` (audience/language/style/dimensions)
 
 ## Output
 
@@ -79,6 +80,14 @@ Use a consistent phase checklist (inspired by the planning/validation patterns i
 Copy/paste checklist:
 
 ```
+
+## Review gate (required)
+
+Do not proceed to `styled-prompts` until the content prompt passes:
+
+- No silent dropping (everything important is in “Must include” somewhere)
+- Each page has exactly one intent and a clear primary representation
+- Any missing data for tables/figures is explicitly marked as TODO
 Content PROMPT Progress:
 - [ ] Setup & analyze (audience, use case, length)
 - [ ] Draft page plan (titles + representations)

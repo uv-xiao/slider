@@ -7,7 +7,6 @@ version = "0.1.0"
 
 [tasks]
 make-artifacts = { cmd = "python .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py" }
-pdf-to-images = { cmd = "python .codex/skills/styled-artifacts/scripts/pdf_to_images.py" }
 
 [dependencies]
 python = "3.11.*"
