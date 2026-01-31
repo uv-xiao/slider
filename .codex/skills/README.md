@@ -20,3 +20,4 @@ Repo skills:
 - `baoyu-slide-deck`: end-to-end slide deck generation (outline → prompts → images → PDF/PPTX)
 - `content-prompts`: convert raw material into per-page content prompts (`prompts/content/*`)
 - `styled-prompts`: convert content prompts into design-complete prompts (`prompts/styled/*`)
+- `hello-world`: minimal demo skill (prints “Hello, world!”)
