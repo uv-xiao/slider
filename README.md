@@ -36,15 +36,14 @@ Legacy v1 components (slider CLI, layout catalogs, and earlier artifact skills) 
 ## Repo structure
 
 - `materials/`: raw source material (notes, images, scratch docs)
-- `specs/`: structured Markdown specs (legacy flow input)
-- `styles/`: style configs (TOML; used by both flows)
+- `styles/`: style configs (TOML; v2, no fixed layout catalog)
 - `prompts/content/`: per-page content prompts (v2)
 - `prompts/styled/`: per-page styled prompts (v2; input to artifact generation)
-- `prompts/generated/`: per-slide prompts rendered from specs (legacy)
-- `prompts/workflow-prompt.md`: reusable workflow prompt template (legacy)
 - `.codex/skills/`: agent skills (planning, design, generation, validation)
 - `artifacts/`: generated workdirs and final outputs (gitignored)
 - `references/`: optional style references (gitignored; keep only README.md in git)
+
+Legacy v1 folders (e.g. `specs/`, `prompts/generated/`, older skills) are under `archieve/v1/`.
 
 ## Quickstart (artifact generation)
 

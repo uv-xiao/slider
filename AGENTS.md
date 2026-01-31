@@ -40,10 +40,8 @@ Examples:
 - `materials/`: raw notes/images/source docs
 - `prompts/content/`: per-page content prompts (v2)
 - `prompts/styled/`: per-page styled prompts (v2; used for image/PDF/PPT generation)
-- `specs/`: Markdown specs (legacy; deterministic scaffold)
-- `styles/`: style configs (TOML; used by both v1 and v2)
+- `styles/`: style configs (TOML; v2, no fixed layout catalog)
 - `references/`: per-style visual references (images/pdfs). This folder is gitignored.
-- `prompts/`: workflow prompts and generated per-slide prompts
 - `artifacts/`: generated outputs + per-deck workdirs (gitignored)
 - `.codex/skills/`: skills used by agents
 
