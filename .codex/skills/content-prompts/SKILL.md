@@ -35,6 +35,11 @@ Format (recommended):
   - **Suggested representations**: bullets vs. diagram vs. table vs. code vs. illustration vs. iconography
   - **Assets**: local file paths / URLs, captions, attribution notes
 
+Templates and references:
+- `references/content-prompt-template.md`
+- `references/analysis-framework.md`
+- `references/content-rules.md`
+
 ## Density and splitting guidance
 
 - If a page exceeds “one-screen readability”, split into `Page N` and `Page N (cont.)`.
@@ -46,6 +51,9 @@ Format (recommended):
   - example vs. takeaway
 
 For a more detailed checklist, see:
+- `references/content-prompt-template.md`
+- `references/analysis-framework.md`
+- `references/content-rules.md`
 - `references/splitting-guide.md`
 - `references/common-pitfalls.md`
 
@@ -67,6 +75,17 @@ Use a consistent phase checklist (inspired by the planning/validation patterns i
    - Terminology consistency, no unexplained acronyms, consistent naming.
 5. **Coverage check**
    - Ensure every important source item is captured under “Must include”.
+
+Copy/paste checklist:
+
+```
+Content PROMPT Progress:
+- [ ] Setup & analyze (audience, use case, length)
+- [ ] Draft page plan (titles + representations)
+- [ ] Density pass (split/merge)
+- [ ] Consistency pass (terms, acronyms, naming)
+- [ ] Coverage pass (no silent dropping)
+```
 
 ## Guardrails
 

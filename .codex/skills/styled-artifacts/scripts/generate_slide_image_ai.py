@@ -92,7 +92,7 @@ class SlideImageGenerator:
     - visual_only: Generate just the image/figure for a slide (for PPT workflow)
     """
     
-    # Quality threshold for presentations (lower than journal/conference papers)
+    # Default quality threshold for presentations (lower than journal/conference papers)
     QUALITY_THRESHOLD = 6.5
     
     # Guidelines for generating full slides (complete slide images)
@@ -362,12 +362,19 @@ Create a high-quality visual/figure for embedding in a slide.
             self._log(f"✗ Generation failed: {self._last_error}")
             return None
     
-    def review_image(self, image_path: str, original_prompt: str, 
-                    iteration: int, visual_only: bool = False,
-                    max_iterations: int = 2) -> Tuple[str, float, bool]:
+    def review_image(
+        self,
+        image_path: str,
+        original_prompt: str,
+        iteration: int,
+        visual_only: bool = False,
+        max_iterations: int = 2,
+        *,
+        quality_threshold: Optional[float] = None,
+    ) -> Tuple[str, float, bool]:
         """Review generated image using Gemini 3 Pro."""
         image_data_url = self._image_to_base64(image_path)
-        threshold = self.QUALITY_THRESHOLD
+        threshold = float(quality_threshold) if quality_threshold is not None else float(self.QUALITY_THRESHOLD)
         
         image_type = "slide visual/figure" if visual_only else "presentation slide"
         
@@ -490,10 +497,16 @@ ITERATION {iteration}: Based on previous feedback, address these specific improv
 
 Generate an improved version that addresses all the critique points."""
     
-    def generate_slide(self, user_prompt: str, output_path: str,
-                      visual_only: bool = False,
-                      iterations: int = 2,
-                      attachments: Optional[List[str]] = None) -> Dict[str, Any]:
+    def generate_slide(
+        self,
+        user_prompt: str,
+        output_path: str,
+        visual_only: bool = False,
+        iterations: int = 2,
+        attachments: Optional[List[str]] = None,
+        *,
+        quality_threshold: Optional[float] = None,
+    ) -> Dict[str, Any]:
         """
         Generate a slide image or visual with iterative refinement.
         
@@ -517,10 +530,11 @@ Generate an improved version that addresses all the critique points."""
         mode = "visual_only" if visual_only else "full_slide"
         guidelines = self.VISUAL_ONLY_GUIDELINES if visual_only else self.FULL_SLIDE_GUIDELINES
         
+        threshold = float(quality_threshold) if quality_threshold is not None else float(self.QUALITY_THRESHOLD)
         results = {
             "user_prompt": user_prompt,
             "mode": mode,
-            "quality_threshold": self.QUALITY_THRESHOLD,
+            "quality_threshold": threshold,
             "attachments": attachments or [],
             "iterations": [],
             "final_image": None,
@@ -544,7 +558,7 @@ Generate a high-quality {'visual/figure' if visual_only else 'presentation slide
             print(f"Attachments: {len(attachments)} image(s)")
             for att in attachments:
                 print(f"  - {att}")
-        print(f"Quality Threshold: {self.QUALITY_THRESHOLD}/10")
+        print(f"Quality Threshold: {threshold}/10")
         print(f"Max Iterations: {iterations}")
         print(f"Output: {output_path}")
         print(f"{'='*60}\n")
@@ -583,9 +597,14 @@ Generate a high-quality {'visual/figure' if visual_only else 'presentation slide
             
             print(f"Reviewing image with Gemini 3 Pro...")
             critique, score, needs_improvement = self.review_image(
-                str(temp_path), user_prompt, i, visual_only, iterations
+                str(temp_path),
+                user_prompt,
+                i,
+                visual_only,
+                iterations,
+                quality_threshold=threshold,
             )
-            print(f"✓ Score: {score}/10 (threshold: {self.QUALITY_THRESHOLD}/10)")
+            print(f"✓ Score: {score}/10 (threshold: {threshold}/10)")
             
             results["iterations"].append({
                 "iteration": i,
@@ -596,7 +615,7 @@ Generate a high-quality {'visual/figure' if visual_only else 'presentation slide
             })
             
             if not needs_improvement:
-                print(f"\n✓ Quality meets threshold ({score} >= {self.QUALITY_THRESHOLD})")
+                print(f"\n✓ Quality meets threshold ({score} >= {threshold})")
                 final_image_data = image_data
                 results["final_score"] = score
                 results["success"] = True
@@ -610,7 +629,7 @@ Generate a high-quality {'visual/figure' if visual_only else 'presentation slide
                 results["success"] = True
                 break
             
-            print(f"\n⚠ Quality below threshold ({score} < {self.QUALITY_THRESHOLD})")
+            print(f"\n⚠ Quality below threshold ({score} < {threshold})")
             print(f"Improving prompt...")
             current_prompt = self.improve_prompt(user_prompt, critique, i + 1, visual_only)
         
@@ -676,6 +695,12 @@ Environment:
                        help="Generate just the visual/figure (for PPT workflow)")
     parser.add_argument("--iterations", type=int, default=2,
                        help="Maximum refinement iterations (default: 2)")
+    parser.add_argument(
+        "--quality-threshold",
+        type=float,
+        default=SlideImageGenerator.QUALITY_THRESHOLD,
+        help=f"Quality threshold 0-10 (default: {SlideImageGenerator.QUALITY_THRESHOLD})",
+    )
     parser.add_argument("--api-key", help="OpenRouter API key (or set OPENROUTER_API_KEY)")
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
     
@@ -688,8 +713,12 @@ Environment:
         print("  export OPENROUTER_API_KEY='your_api_key'")
         sys.exit(1)
     
-    if args.iterations < 1 or args.iterations > 2:
-        print("Error: Iterations must be between 1 and 2")
+    if args.iterations < 1 or args.iterations > 5:
+        print("Error: Iterations must be between 1 and 5")
+        sys.exit(1)
+
+    if args.quality_threshold < 0 or args.quality_threshold > 10:
+        print("Error: quality-threshold must be between 0 and 10")
         sys.exit(1)
     
     # Validate attachments exist
@@ -706,7 +735,8 @@ Environment:
             output_path=args.output,
             visual_only=args.visual_only,
             iterations=args.iterations,
-            attachments=args.attachments
+            attachments=args.attachments,
+            quality_threshold=float(args.quality_threshold),
         )
         
         if results["success"]:

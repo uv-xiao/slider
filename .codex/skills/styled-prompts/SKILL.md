@@ -63,6 +63,9 @@ If the style has a “hand-drawn / sketch” theme, explicitly state line weight
 
 See templates and pitfalls:
 - `references/element-spec-template.md`
+- `references/design-guidelines.md`
+- `references/layout-patterns.md`
+- `references/icon-illustration-guide.md`
 - `references/common-pitfalls.md`
 
 ## Adding vivid/intuitive visuals (icons, illustrations, tables)
@@ -95,3 +98,12 @@ For each slide, prefer at least one “visual anchor” when it improves compreh
    - If any key text would become small, split the slide instead of shrinking.
 5. **Validation mindset**
    - Write prompts so the renderer does not need to guess (explicit geometry and styling).
+
+## Richness targets (what to add beyond text)
+
+Aim for at least one of these per slide when it improves comprehension:
+
+- **Iconography**: small icon per bullet group/category
+- **Diagram**: process/architecture/relationship diagrams, explicitly specified
+- **Table**: full data table with highlighted cells + one-line insight
+- **Illustration**: scene metaphor that encodes meaning (not decoration)

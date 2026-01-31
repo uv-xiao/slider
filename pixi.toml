@@ -6,10 +6,8 @@ platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 version = "0.1.0"
 
 [tasks]
-structure-spec = { cmd = "PYTHONPATH=src python -m slider structure-spec" }
-render-prompts = { cmd = "PYTHONPATH=src python -m slider --styles-dir styles render-prompts --workflow prompts/workflow-prompt.md" }
-evolve-style = { cmd = "PYTHONPATH=src python -m slider --styles-dir styles evolve-style" }
-make-artifacts = { cmd = "python .codex/skills/scientific-slides/scripts/slider_prompts_to_artifacts.py" }
+make-artifacts = { cmd = "python .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py" }
+pdf-to-images = { cmd = "python .codex/skills/styled-artifacts/scripts/pdf_to_images.py" }
 
 [dependencies]
 python = "3.11.*"
