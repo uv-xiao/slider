@@ -53,3 +53,34 @@ style_prompt = """
 Ensure caption remains readable via subtle overlay or high-contrast placement.
 """
 
+[layouts.title_code]
+layout_description = """
+Title + code block.
+"""
+style_prompt = """
+Use a monospace font for code, preserve formatting, and ensure high contrast and readable size.
+"""
+
+[layouts.title_bullets_code]
+layout_description = """
+Title + short bullets + code block.
+"""
+style_prompt = """
+Keep bullets short; render code in a clear monospace block with high contrast.
+"""
+
+[layouts.title_table]
+layout_description = """
+Title + table.
+"""
+style_prompt = """
+Render table with clear grid lines and readable text; avoid cramped cells.
+"""
+
+[layouts.title_bullets_table]
+layout_description = """
+Title + short bullets + table.
+"""
+style_prompt = """
+Keep bullets short; make table readable with clear grid lines and spacing.
+"""

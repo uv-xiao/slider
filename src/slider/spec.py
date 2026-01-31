@@ -9,6 +9,7 @@ _H1_RE = re.compile(r"^#\s+(.+?)\s*$")
 _H2_RE = re.compile(r"^##\s+(.+?)\s*$")
 _BULLET_RE = re.compile(r"^\s*[-*+]\s+(.+?)\s*$")
 _IMAGE_RE = re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")
+_CODE_FENCE_RE = re.compile(r"^\s*```")
 
 
 @dataclass
@@ -35,10 +36,28 @@ def parse_markdown_spec(text: str) -> Deck:
     deck_title = "Untitled Deck"
     slides: List[Slide] = []
     current: Optional[Slide] = None
+    in_code_block = False
 
     lines = text.splitlines()
     for raw in lines:
         line = raw.rstrip("\n")
+
+        if _CODE_FENCE_RE.match(line):
+            if current is None:
+                current = Slide(title=deck_title)
+                slides.append(current)
+            current.body.append(line.rstrip())
+            in_code_block = not in_code_block
+            continue
+
+        if in_code_block:
+            if current is None:
+                current = Slide(title=deck_title)
+                slides.append(current)
+            # Preserve code block content verbatim, including blank lines.
+            current.body.append(line.rstrip())
+            continue
+
         if not line.strip():
             continue
 
@@ -57,6 +76,11 @@ def parse_markdown_spec(text: str) -> Deck:
             current = Slide(title=deck_title)
             slides.append(current)
 
+        # Preserve markdown tables as body; avoid treating their rows as bullets.
+        if line.lstrip().startswith("|"):
+            current.body.append(line.strip())
+            continue
+
         bullet = _BULLET_RE.match(line)
         if bullet:
             current.bullets.append(bullet.group(1).strip())
@@ -73,13 +97,21 @@ def parse_markdown_spec(text: str) -> Deck:
 
 def infer_layout(slide: Slide) -> str:
     if slide.images:
+        # If the slide is primarily an image with at most a tiny caption, prefer full-bleed.
+        if (not slide.body) and (len(slide.bullets) <= 1):
+            return "image_full_bleed_caption"
         if slide.bullets or slide.body:
             return "image_left_text_right"
         return "image_full_bleed_caption"
+    has_code = any("```" in line for line in slide.body)
+    has_table = any(line.lstrip().startswith("|") for line in slide.body)
+    if has_code:
+        return "title_bullets_code" if slide.bullets else "title_code"
+    if has_table:
+        return "title_bullets_table" if slide.bullets else "title_table"
     bullet_count = len(slide.bullets)
     if bullet_count >= 7:
         return "two_column_bullets"
     if bullet_count >= 1:
         return "title_bullets"
     return "title_only"
-

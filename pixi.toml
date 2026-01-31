@@ -1,0 +1,18 @@
+[workspace]
+authors = ["Youwei Xiao <shallwe@pku.edu.cn>"]
+channels = ["conda-forge"]
+name = "slider"
+platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+version = "0.1.0"
+
+[tasks]
+structure-spec = { cmd = "PYTHONPATH=src python -m slider structure-spec" }
+render-prompts = { cmd = "PYTHONPATH=src python -m slider --styles-dir styles render-prompts --workflow prompts/workflow-prompt.md" }
+evolve-style = { cmd = "PYTHONPATH=src python -m slider --styles-dir styles evolve-style" }
+make-artifacts = { cmd = "python .codex/skills/scientific-slides/scripts/slider_prompts_to_artifacts.py" }
+
+[dependencies]
+python = "3.11.*"
+requests = ">=2.32.5,<3"
+pillow = ">=12.1.0,<13"
+python-pptx = ">=1.0.2,<2"

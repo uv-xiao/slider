@@ -26,6 +26,23 @@ class TestSpecParser(unittest.TestCase):
         deck3 = parse_markdown_spec("# T\n\n## S\n![alt](x.png)\n")
         self.assertEqual(infer_layout(deck3.slides[0]), "image_left_text_right")
 
+        deck4 = parse_markdown_spec("# T\n\n## S\n```text\nhi\n```\n")
+        self.assertEqual(infer_layout(deck4.slides[0]), "title_code")
+
+        deck5 = parse_markdown_spec("# T\n\n## S\n- a\n```text\nhi\n```\n")
+        self.assertEqual(infer_layout(deck5.slides[0]), "title_bullets_code")
+
+        deck6 = parse_markdown_spec("# T\n\n## S\n| A | B |\n|---|---|\n| 1 | 2 |\n")
+        self.assertEqual(infer_layout(deck6.slides[0]), "title_table")
+
+    def test_does_not_parse_bullets_inside_code_fences(self) -> None:
+        deck = parse_markdown_spec("# T\n\n## S\n```text\n- not a bullet\n```\n- real bullet\n")
+        self.assertEqual(deck.title, "T")
+        self.assertEqual(len(deck.slides), 1)
+        self.assertEqual(deck.slides[0].bullets, ["real bullet"])
+        self.assertIn("```text", deck.slides[0].body)
+        self.assertIn("- not a bullet", deck.slides[0].body)
+
 
 if __name__ == "__main__":
     unittest.main()

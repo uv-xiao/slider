@@ -1,16 +1,16 @@
 [GENERAL]
-default_layout = "title_infographic"
+default_layout = "title_bullets"
 style_prompt = """
 Global constraints:
 - Background: White grid/graph paper pattern (notebook paper style with faint gray grid lines forming a subtle square pattern)
 - Typography: Hand-drawn style bold fonts for headers, clean sans-serif for body text
-- Bilingual titles: Chinese (primary) + English (secondary/subtitle)
-- Illustrations: Simple hand-drawn stick figures positioned at corners or bottom of slides, holding pointers/sticks, with cute friendly expressions
+- Titles: Chinese-first if provided; if an English subtitle is provided, render it as a smaller secondary line (do not force bilingual content)
+- Illustrations: Simple hand-drawn stick figures positioned at corners or bottom of slides (optional), holding pointers/sticks, with cute friendly expressions
 
 Color Palette (strictly follow):
-- Primary Blue: #4285F4 (for SKILL-related elements)
-- Primary Green: #34A853 (for MCP-related elements)  
-- Primary Orange: #FB8C00 (for PROMPT-related elements)
+- Primary Blue: #4285F4 (accent A)
+- Primary Green: #34A853 (accent B)
+- Primary Orange: #FB8C00 (accent C)
 - Primary Red: #EA4335 (for warnings, highlights, emphasis)
 - Black: #000000 (for all outlines, text, borders)
 - White: #FFFFFF (for container backgrounds)
@@ -29,9 +29,9 @@ Visual Elements:
 Layout Principles:
 - Generous margins around all elements
 - Clear visual hierarchy with size variation
-- Color-coded sections (blue/green/orange) for different concepts
+- Color-coded sections (blue/green/orange) to differentiate categories when helpful (do not hardcode meanings)
 - White space between major sections
-- Bottom-right corner typically reserved for the stick figure presenter
+- Keep a consistent “hand-drawn” visual language across the full deck
 """
 
 [layouts.title_infographic]
@@ -41,7 +41,7 @@ Use for: Architecture diagrams, layered system explanations, hierarchical data f
 """
 style_prompt = """
 Structure:
-1. Top: Large bilingual title (Chinese bold, English subtitle below)
+1. Top: Large title (optional smaller subtitle below)
 2. Center: Main infographic using 3D stacked cubes/boxes showing layers or hierarchy
    - Each box: Light colored fill (blue/green/orange) with thick black outline
    - Numbered circles (1, 2, 3) in accent colors for sequence
@@ -50,10 +50,10 @@ Structure:
 4. Bottom: Optional comparison section in outlined box with contrasting examples
 5. Bottom-left corner: Stick figure character holding pointer, with speech bubble containing key takeaway
 
-Color assignment:
-- Layer 1/Meta: Blue (#4285F4)
-- Layer 2/Instruction: Green (#34A853)
-- Layer 3/Resource: Orange (#FB8C00)
+Color assignment (generic):
+- Layer A: Blue (#4285F4)
+- Layer B: Green (#34A853)
+- Layer C: Orange (#FB8C00)
 - Emphasis/Warning: Red (#EA4335)
 
 All boxes must have 3D perspective with visible top and side faces, light shading.
@@ -66,14 +66,14 @@ Use for: Comparing 3 concepts, products, or approaches horizontally.
 """
 style_prompt = """
 Structure:
-1. Top: Bilingual title
+1. Top: Title (optional smaller subtitle below)
 2. Main area: 3 equal-width columns side by side
    - Each column has colored header bar at top (Blue for column 1, Green for column 2, Orange for column 3)
-   - Header contains: Icon + Bold title text (Chinese + English)
+   - Header contains: Icon + Bold title text
    - Body: Light tinted background, contains:
      * Definition/Nature sections with underlined headers
      * Analogies in pill-shaped tags
-     * Icons representing concepts (folder, USB, speech bubble)
+     * Simple icons representing each concept (choose appropriate icons for the content)
 3. Curved arrows connecting columns (black, hand-drawn) showing relationships
 4. Bottom: Speech bubble with concluding statement, stick figure pointing
 
@@ -91,7 +91,7 @@ Use for: Step-by-step processes, loading mechanisms, disclosure patterns.
 """
 style_prompt = """
 Structure:
-1. Top: Bilingual title with question subtitle in red (e.g., "为什么Token消耗极低？")
+1. Top: Title (optional red subtitle if you want to frame a question)
 2. Center: 3 vertically stacked 3D boxes, slightly overlapping
    - Each box: Isometric 3D cube appearance with depth
    - Top surface shows diagonal hatching pattern
@@ -99,9 +99,7 @@ Structure:
    - Front face contains bullet points
 3. Left side: Numbered labels (① ② ③) with category names
 4. Right side: Status indicators with colored text and arrows
-   - Green checkmark for "Always Loaded"
-   - Orange arrow for "On-demand"
-   - Red arrow for "Referenced"
+   - Use green/ orange/ red indicators to communicate status (labels must match the slide content)
 5. Box connectors: Large curved arrows on left side between boxes
 6. Bottom: Comparison section with two contrasting examples side by side
 7. Bottom-left: Stick figure with speech bubble emphasizing key advantage
@@ -119,21 +117,19 @@ Use for: Decision guides, selection workflows, "which to choose" scenarios.
 """
 style_prompt = """
 Structure:
-1. Top: Bilingual title
+1. Top: Title (optional smaller subtitle below)
 2. Flow diagram (top-down layout):
    - Start node: Rounded oval with red outline, "开始 START" label
    - Diamond decision nodes: Rotated 45° squares with thick borders (blue or orange)
      * YES/NO labels in green/red on arrow paths
    - Result boxes: Rounded rectangles with thick colored borders
-     * Orange border for PROMPT result
-     * Blue border for SKILL result
-     * Green border for MCP result
+     * Use orange/blue/green borders to differentiate result categories (generic A/B/C)
    - Arrows: Thick black lines with arrowheads, curved paths
 3. Each result box contains:
    - Bold title: "使用 XXX"
    - Checkmark bullet points
    - Example in smaller text at bottom
-4. Bottom section: "组合使用 Combination" with 3 boxes (orange+blue+green) showing integration
+4. Bottom section: Optional “组合使用 / Combination” area showing how multiple choices can be combined
 5. Bottom: Stick figure with red speech bubble containing conclusion
 
 Decision node styling:
@@ -150,22 +146,20 @@ Use for: Concept relationship visualization, synergy explanations, workflow inte
 """
 style_prompt = """
 Structure:
-1. Top: Bilingual title
+1. Top: Title (optional smaller subtitle below)
 2. Three horizontal definition bars:
-   - Orange bar: PROMPT definition with speech bubble icon
-   - Blue bar: SKILL definition with book/document icon
-   - Green bar: MCP definition with plug/socket icon
+   - Orange bar: Concept A definition
+   - Blue bar: Concept B definition
+   - Green bar: Concept C definition
 3. Center: Venn diagram with 3 overlapping circles
-   - Orange circle (left): PROMPT
-   - Blue circle (right): SKILL
-   - Green circle (bottom): MCP
-   - Center overlap: "互补而非竞争" (Complementary, not competitive)
+   - Orange circle (left): Concept A
+   - Blue circle (right): Concept B
+   - Green circle (bottom): Concept C
+   - Center overlap: A short key insight phrase (in Chinese)
    - Arrows pointing outward to use cases:
-     * Orange arrow: "一次性指令" (One-time instruction)
-     * Blue arrow: "重复工作手册" (Repetitive work manual)
-     * Green arrow: "访问外部工具" (Access external tools)
-4. Bottom: "实战案例 Case Study" section with vertical workflow
-   - Sequential boxes: PROMPT → SKILL → MCP → SKILL → SKILL → Output
+     * 1–2 concise labels per circle (must match the content)
+4. Bottom: Optional “Case Study” mini-workflow section
+   - Sequential boxes: A → B → C → Output (or any sequence matching the content)
    - Arrows between steps
    - Small icons next to relevant steps
 5. Bottom banner: Red outlined box with key insight in Chinese
@@ -185,7 +179,7 @@ Use for: Feature comparison matrices, capability assessments, platform compariso
 """
 style_prompt = """
 Structure:
-1. Top: Bilingual title with part indicator (e.g., "技术特性对比 (2/2)")
+1. Top: Title (optional part indicator like "(1/2)" if needed)
 2. Main table: 3 columns × 4+ rows
    - Header row: Column titles in colored text (Blue, Green, Orange)
    - Row labels (leftmost): Feature names in bold black text
@@ -216,9 +210,7 @@ Use for: Opening slides, section dividers, chapter transitions.
 """
 style_prompt = """
 Structure:
-1. Center or upper-center: Large bilingual title
-   - Chinese: Very large, bold, hand-drawn style
-   - English: Medium size, below Chinese, regular weight
+1. Center or upper-center: Large title (Chinese-first if provided; optional smaller English subtitle below)
 2. Subtle grid background visible
 3. Optional: Small decorative element (mini stick figure or icon) in corner
 4. Ample whitespace (60% of slide)
@@ -227,4 +219,146 @@ Typography:
 - Chinese title: 48-60pt equivalent
 - English subtitle: 24-30pt equivalent
 - Black text on white grid background
+"""
+
+[layouts.image_full_bleed_caption]
+layout_description = """
+Full-bleed image with a short caption.
+"""
+style_prompt = """
+Follow the [GENERAL].style_prompt global constraints.
+
+Structure:
+- Use a single image as the background (full-bleed / edge-to-edge).
+- Place a short caption (and optional title) in a safe area.
+
+Styling:
+- Ensure text remains readable using consistent style techniques (overlay, label, outline, or container).
+- Avoid covering key parts of the image.
+"""
+[layouts.image_left_text_right]
+layout_description = """
+Image on the left, text (bullets/body) on the right.
+"""
+style_prompt = """
+Follow the [GENERAL].style_prompt global constraints.
+
+Structure:
+- Left: one primary image (optionally with a short caption if provided).
+- Right: title and supporting text (bullets and/or short body lines).
+- Keep the image visually prominent; do not let text overpower it.
+
+Styling:
+- Use frames, outlines, stickers, or containers consistent with the style.
+- Maintain strong contrast for any captions or overlays.
+"""
+[layouts.title_bullets]
+layout_description = """
+Title + 1–6 bullets. Use for standard content slides.
+"""
+style_prompt = """
+Follow the [GENERAL].style_prompt global constraints.
+
+Structure:
+- Title at top (optional smaller subtitle below).
+- Bullet list beneath, 1–6 bullets, comfortable line spacing.
+- If a short 'body' paragraph is present, place it above the bullets or as the last bullet.
+
+Styling:
+- Prefer hand-drawn bullet icons (dots, checkmarks, simple icons) consistent with the style.
+- Use light tinted containers (pastel fills) when grouping bullets is helpful; keep thick black outlines.
+- Maintain consistent margins and alignment.
+"""
+[layouts.two_column_bullets]
+layout_description = """
+Title + bullets split into 2 columns (for bullet-heavy slides).
+"""
+style_prompt = """
+Follow the [GENERAL].style_prompt global constraints.
+
+Structure:
+- Title at top.
+- Split bullets into two balanced columns below the title.
+- Keep columns aligned to a consistent baseline and avoid cramped text.
+
+Styling:
+- Use subtle guides (dividers, containers, or spacing) consistent with the hand-drawn style.
+- Ensure both columns feel equally weighted.
+"""
+
+[layouts.title_code]
+layout_description = """
+Title + code block.
+Use for: Slides that mainly show a fenced code snippet.
+"""
+style_prompt = """
+Follow the [GENERAL].style_prompt global constraints.
+
+Structure:
+1. Top: Title (optional smaller subtitle)
+2. Main: A single code container (hand-drawn rounded rectangle, thick black outline)
+   - Inside: Monospace code text (high contrast, readable size)
+   - Preserve code formatting exactly (line breaks, indentation)
+3. Optional: 1 small callout bubble pointing to a key line (red outline)
+
+Styling:
+- Code container background: very light gray/blue tint on top of the grid (keep readable)
+- Avoid excessive decoration; readability first.
+"""
+
+[layouts.title_bullets_code]
+layout_description = """
+Title + short bullets + code block.
+Use for: When bullets frame the idea and code demonstrates it.
+"""
+style_prompt = """
+Follow the [GENERAL].style_prompt global constraints.
+
+Structure:
+1. Top: Title
+2. Upper/side: 2–4 short bullets in a light tinted container (hand-drawn outline)
+3. Main area: Code container (monospace, high contrast, preserve formatting)
+
+Styling:
+- Keep bullets short; let the code be the main evidence.
+- Use one accent color for the bullets container border (blue/green/orange), not all three.
+"""
+
+[layouts.title_table]
+layout_description = """
+Title + table.
+Use for: Slides that mainly show a Markdown table or comparison matrix.
+"""
+style_prompt = """
+Follow the [GENERAL].style_prompt global constraints.
+
+Structure:
+1. Top: Title
+2. Main: Table rendered clearly
+   - Thick black grid lines
+   - Header row with light tinted fill (choose one accent)
+   - Body cells on white/light background for readability
+3. Optional: Small stick figure in corner pointing to the table
+
+Styling:
+- Keep cell text concise; avoid cramped rows.
+- If table is wide, increase margins and reduce non-essential decorations.
+"""
+
+[layouts.title_bullets_table]
+layout_description = """
+Title + short bullets + table.
+Use for: When bullets summarize and the table provides details.
+"""
+style_prompt = """
+Follow the [GENERAL].style_prompt global constraints.
+
+Structure:
+1. Top: Title
+2. 1–3 bullets (very short) summarizing the takeaway
+3. Table as the main content block
+
+Styling:
+- Bullets should not compete with the table; keep them minimal.
+- Use consistent hand-drawn borders and a single accent color.
 """

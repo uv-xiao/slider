@@ -5,9 +5,6 @@ references/**
 artifacts/**
 !artifacts/README.md
 
-prompts/generated/**
-!prompts/generated/README.md
-
 # Python
 __pycache__/
 *.py[cod]
@@ -18,3 +15,14 @@ build/
 .pytest_cache/
 .coverage
 
+# pixi
+.pixi/
+
+# secrets
+.OPENROUTER_API_KEY
+
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+
+.*KEY
