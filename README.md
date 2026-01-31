@@ -21,7 +21,7 @@ The core idea is to split the problem into two prompt transformations, then gene
 - Input: `prompts/styled/<deck>.md`
 - Output workdir: `artifacts/<deck>/work/` (intermediate prompts, images, logs)
 - Final outputs: `artifacts/<deck>/<deck>.pdf` and `artifacts/<deck>/<deck>.pptx`
-- Skill/tooling: `.codex/skills/scientific-slides/` (and/or `.codex/skills/baoyu-slide-deck/`)
+- Skill: `.codex/skills/styled-artifacts/`
 
 ### Why this is better than v1
 
@@ -29,11 +29,9 @@ The core idea is to split the problem into two prompt transformations, then gene
 - Fewer built-in layouts: styles focus on visual identity and constraints; page structure is decided per slide.
 - Workdir keeps everything reproducible and debuggable (`artifacts/<deck>/work/`), without polluting git history.
 
-## Legacy flow (v1 / slider CLI)
+## Archived v1
 
-The original slider flow is still available for deterministic scaffolding:
-
-`SPEC (specs/*.md) + STYLE (styles/*.toml) -> slider render-prompts -> prompts/generated/*.md`
+Legacy v1 components (slider CLI, layout catalogs, and earlier artifact skills) are kept under `archieve/v1/` for reference.
 
 ## Repo structure
 
@@ -56,7 +54,7 @@ Install runtime deps (recommended):
 
 Generate PDF/PPTX from a styled prompts file:
 
-- `OPENROUTER_API_KEY=... python3 .codex/skills/scientific-slides/scripts/slider_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --out-dir artifacts/<deck>/work --pdf artifacts/<deck>/<deck>.pdf --pptx artifacts/<deck>/<deck>.pptx`
+- `OPENROUTER_API_KEY=... python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --pdf artifacts/<deck>/<deck>.pdf --pptx artifacts/<deck>/<deck>.pptx`
 
 ## Notes
 

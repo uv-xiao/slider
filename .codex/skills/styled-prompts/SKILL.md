@@ -24,7 +24,7 @@ Turn `prompts/content/<deck>.md` into `prompts/styled/<deck>.md` by applying a *
 
 Write to: `prompts/styled/<deck>.md`
 
-The output should be compatible with artifact generators (e.g. `scientific-slides`), meaning one block per slide:
+ The output should be compatible with `styled-artifacts`, meaning one block per slide:
 
 - `## Slide N: <title>`
 - A short **layout decision** (free-form): what regions exist and why (e.g., “title + left bullets + right diagram”)
@@ -61,6 +61,10 @@ Use a repeatable element inventory format per slide:
 
 If the style has a “hand-drawn / sketch” theme, explicitly state line weight, wobble, marker highlight behavior, and how to render arrows/containers.
 
+See templates and pitfalls:
+- `references/element-spec-template.md`
+- `references/common-pitfalls.md`
+
 ## Adding vivid/intuitive visuals (icons, illustrations, tables)
 
 For each slide, prefer at least one “visual anchor” when it improves comprehension:
@@ -75,3 +79,19 @@ For each slide, prefer at least one “visual anchor” when it improves compreh
 - All “Must include” items from the content prompt must appear in the styled prompt.
 - If a page is too dense, do not shrink text to illegibility; split into an additional slide.
 - Avoid “generic filler visuals”; every figure must convey information.
+
+## Suggested workflow (phases)
+
+1. **Load style config**
+   - Treat the style config as constraints (palette, typography, shapes), not a fixed layout catalog.
+2. **Per-slide design**
+   - Choose a structure driven by content (comparison/process/metric/code/image).
+   - Produce an explicit element inventory (bbox + z-order + content + style).
+   - Add an icon/diagram/table/illustration only when it improves comprehension.
+3. **Cross-slide consistency**
+   - Ensure repeated elements (badges, icons, callouts) use the same visual language.
+   - Ensure spacing and alignment feel consistent across slides.
+4. **Legibility & density**
+   - If any key text would become small, split the slide instead of shrinking.
+5. **Validation mindset**
+   - Write prompts so the renderer does not need to guess (explicit geometry and styling).

@@ -10,18 +10,17 @@ This repo is designed so **all concrete work is executed through Codex**.
 
 ### Two modes of delegation
 
-**1. Operations (use `$slider-ops`):**
+**1. Operations (use v2 skills):**
 
-For day-to-day tasks using existing slider features, use the repo skill `slider-ops`:
+For day-to-day tasks, use the v2 skills:
 
-- Do **not** directly implement operational tasks yourself (parsing/editing styles, prompt generation, spec analysis, reference extraction, artifact generation).
-- Instead, **delegate to Codex via `$slider-ops`** and explicitly invoke the skill.
+- Do **not** directly implement operational tasks yourself (content planning, slide design, artifact generation).
+- Instead, explicitly invoke the relevant skill.
 
 Examples:
-- "$slider-ops list styles, then render prompts for `specs/mydeck.md` with style `minimal`."
-- "$slider-ops create a new style `acme`, then add a `two_column_bullets` layout entry."
-- "$slider-ops read `references/acme/*` (images/pdfs/ppt), extract a reusable style prompt, and update `styles/acme.toml`."
-- "$slider-ops generate artifacts (images/ppt/pdf) into `artifacts/` after producing per-slide prompts."
+- "$content-prompts read `materials/mydeck/` and produce `prompts/content/mydeck.md`."
+- "$styled-prompts convert `prompts/content/mydeck.md` + `styles/acme.toml` into `prompts/styled/mydeck.md`."
+- "$styled-artifacts generate images + PDF + PPTX from `prompts/styled/mydeck.md` into `artifacts/mydeck/work/`."
 
 **2. Feature Evolution (delegate freely to Codex):**
 
@@ -57,11 +56,6 @@ Examples:
 3. Convert to styled prompts in `prompts/styled/<deck>.md` using a style config from `styles/<style>.toml`.
 4. Generate slide images + PDF/PPTX into `artifacts/<deck>/` (keep intermediates in `artifacts/<deck>/work/`).
 
-### Legacy (v1 / slider CLI)
+### Archived (v1)
 
-1. Put your deck content in `specs/<deck>.md`.
-2. Pick a style in `styles/` (e.g. `styles/minimal.toml`).
-3. Generate per-slide prompts:
-   - Without install: `PYTHONPATH=src python3 -m slider render-prompts --spec specs/<deck>.md --style <style> --out prompts/generated/<deck>.md`
-   - With install: `python3 -m pip install -e .` then `slider render-prompts --spec specs/<deck>.md --style <style> --out prompts/generated/<deck>.md`
-4. Generate artifacts from `prompts/generated/<deck>.md` using `.codex/skills/scientific-slides/`.
+Legacy v1 components live under `archieve/v1/`.

@@ -38,11 +38,35 @@ Format (recommended):
 ## Density and splitting guidance
 
 - If a page exceeds “one-screen readability”, split into `Page N` and `Page N (cont.)`.
-- Prefer splitting by:
+- Prefer splitting by phases and intent boundaries:
+  - setup → execution → results → lessons
   - topic boundary
   - step sequence
   - before/after comparison
   - example vs. takeaway
+
+For a more detailed checklist, see:
+- `references/splitting-guide.md`
+- `references/common-pitfalls.md`
+
+## Suggested workflow (phases)
+
+Use a consistent phase checklist (inspired by the planning/validation patterns in archived v1 skills):
+
+1. **Setup & analyze**
+   - Identify target: live talk vs shareable doc vs training.
+   - Identify audience level and target length (time or slide count).
+   - Identify content types present (code, tables, diagrams, screenshots).
+2. **Draft page plan**
+   - Propose page titles as takeaways.
+   - Decide per-page representation (bullets vs diagram vs table vs code).
+3. **Density check**
+   - Split pages that have multiple intents or competing representations.
+   - Merge pages that are too sparse and share the same intent.
+4. **Consistency check**
+   - Terminology consistency, no unexplained acronyms, consistent naming.
+5. **Coverage check**
+   - Ensure every important source item is captured under “Must include”.
 
 ## Guardrails
 
