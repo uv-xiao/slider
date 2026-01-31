@@ -15,9 +15,12 @@ This repo is designed so **all concrete work is executed through Codex**.
 For day-to-day tasks, use the v2 skills:
 
 - Do **not** directly implement operational tasks yourself (content planning, slide design, artifact generation).
-- Instead, explicitly invoke the relevant skill.
+- Instead:
+  - Use `$slider-plan` to produce a plan (in the `create-plan` template) that sequences the required steps.
+  - Then execute the plan by invoking the individual v2 skills.
 
 Examples:
+- "$slider-plan I have `materials/mydeck/` and want a PDF + PPTX."
 - "$content-prompts read `materials/mydeck/` and produce `prompts/content/mydeck.md`."
 - "$styled-prompts convert `prompts/content/mydeck.md` + `styles/acme.md` into `prompts/styled/mydeck.md`."
 - "$styled-artifacts generate images + PDF + PPTX from `prompts/styled/mydeck.md` into `artifacts/mydeck/work/`."
@@ -50,10 +53,16 @@ Examples:
 
 ### Recommended (v2 / agentic)
 
-1. Put raw material in `materials/<deck>/...`.
-2. Generate per-page content prompts in `prompts/content/<deck>.md` (skill-driven planning, density checks).
-3. Convert to styled prompts in `prompts/styled/<deck>.md` using a style brief from `styles/<style>.md`.
-4. Generate slide images + PDF/PPTX into `artifacts/<deck>/` (keep intermediates in `artifacts/<deck>/work/`).
+0. If the user asks for any prompt/artifact output (Content PROMPT, Styled PROMPT, images, PDF, PPTX), start with `$slider-plan` and produce a plan.
+1. Put raw material in `materials/<deck>/...` (or use an existing prompt as input).
+2. Generate per-page content prompts in `prompts/content/<deck>.md` (via `$content-prompts`).
+3. Convert to styled prompts in `prompts/styled/<deck>.md` using a style brief from `styles/<style>.md` (via `$styled-prompts`).
+4. Generate slide images + PDF/PPTX into `artifacts/<deck>/` (keep intermediates in `artifacts/<deck>/work/`) via `$styled-artifacts`.
+
+Review policy:
+
+- Review happens on prompts (`prompts/content/*` and `prompts/styled/*`).
+- Do not run expensive “regenerate + review” loops on final artifacts.
 
 ### Archived (v1)
 

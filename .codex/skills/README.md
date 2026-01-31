@@ -13,6 +13,7 @@ Suggested skill categories for this repo:
 If you're missing a skill, search for one (e.g. skillsmp.com) and add it here.
 
 Repo skills:
+- `slider-plan`: plan/orchestrate which skills to run for a user request (plan-only; use before generating prompts/artifacts)
 - `content-prompts`: convert raw material into per-page content prompts (`prompts/content/*`)
 - `styled-prompts`: convert content prompts into design-complete prompts (`prompts/styled/*`)
 - `styled-artifacts`: generate images + PDF/PPTX from `prompts/styled/*` into `artifacts/<deck>/work/`
