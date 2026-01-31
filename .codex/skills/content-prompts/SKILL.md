@@ -101,3 +101,12 @@ Content PROMPT Progress:
 - Do not decide final visual layout here (that’s the styling step).
 - Do not invent facts; if a source is ambiguous, mark it as a TODO/question.
 - Keep titles short and information-rich.
+
+## Modification & iteration
+
+Treat `prompts/content/<deck>.md` as the single source of truth for planning.
+
+- **Edit a page**: update the page’s “Must include” and “Suggested representation”.
+- **Split a page**: duplicate the page section into `Page N` and `Page N (cont.)`, then re-check density and intent.
+- **Merge pages**: merge only if they share one intent and one primary representation.
+- After edits, re-run the “Review gate” checklist before moving on to styling.

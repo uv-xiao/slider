@@ -25,7 +25,15 @@ Turn `prompts/content/<deck>.md` into `prompts/styled/<deck>.md` by applying a *
 
 Write to: `prompts/styled/<deck>.md`
 
- The output should be compatible with `styled-artifacts`, meaning one block per slide:
+The output should be compatible with `styled-artifacts`.
+
+**Required deck-level header**: At the top of the file (before the first `## Slide N:`), write a concise **global style/formatting contract** so the renderer has stable “style memory”:
+
+- Formatting goal (background treatment, palette roles, typography feel)
+- Reusable components (badges/callouts/arrows/containers) + their visual rules
+- Icon/illustration rules (outline vs filled, stroke weight, shading)
+
+Then, one block per slide:
 
 - `## Slide N: <title>`
 - A short **layout decision** (free-form): what regions exist and why (e.g., “title + left bullets + right diagram”)
@@ -107,6 +115,15 @@ For each slide, prefer at least one “visual anchor” when it improves compreh
 - All “Must include” items from the content prompt must appear in the styled prompt.
 - If a page is too dense, do not shrink text to illegibility; split into an additional slide.
 - Avoid “generic filler visuals”; every figure must convey information.
+
+## Modification & iteration
+
+Treat `prompts/styled/<deck>.md` as the single source of truth.
+
+- **Edit a slide**: modify the slide block, keep the same slide number, and regenerate that slide with `styled-artifacts --only N`.
+- **Add a slide**: insert a new `## Slide N:` block, then renumber subsequent slides to keep numbering unique and ordered.
+- **Delete a slide**: remove the block, then renumber subsequent slides.
+- **Keep the deck-level header** intact: it’s the global style contract applied to all slides.
 
 ## Suggested workflow (phases)
 

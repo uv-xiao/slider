@@ -2,6 +2,16 @@
 
 Use a repeatable inventory so the renderer does not guess.
 
+## Deck-level style contract (required)
+
+At the very top of `prompts/styled/<deck>.md` (before the first `## Slide N:`), include a short global block describing:
+
+- formatting goal (background treatment, palette roles, typography feel)
+- reusable component language (badges/callouts/arrows/containers)
+- icon/illustration rules (outline vs filled, stroke weight, shading)
+
+This is the primary “style memory” that is applied to every slide, and complements the previous-slide attachment used during rendering.
+
 ## Canvas
 
 - Aspect: 16:9
@@ -26,4 +36,3 @@ For each element:
 - `z`: `content`
 - `content`: full table (rows/cols)
 - `style`: header fill, row banding, highlighted cells, padding, border weight
-

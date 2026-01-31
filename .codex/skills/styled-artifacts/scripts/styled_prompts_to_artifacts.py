@@ -26,6 +26,37 @@ class ParsedSlide:
     images: list[tuple[str, str]]  # (alt, src)
 
 
+def _parse_only(value: str) -> set[int]:
+    """
+    Parse a slide selection string like:
+      - "3"
+      - "2,5,8"
+      - "5-8"
+      - "1,3-5,9"
+    """
+    out: set[int] = set()
+    for part in (value or "").split(","):
+        p = part.strip()
+        if not p:
+            continue
+        if "-" in p:
+            a, b = p.split("-", 1)
+            a_i = int(a.strip())
+            b_i = int(b.strip())
+            if a_i <= 0 or b_i <= 0:
+                raise ValueError("slide numbers must be positive")
+            lo, hi = (a_i, b_i) if a_i <= b_i else (b_i, a_i)
+            out.update(range(lo, hi + 1))
+        else:
+            i = int(p)
+            if i <= 0:
+                raise ValueError("slide numbers must be positive")
+            out.add(i)
+    if not out:
+        raise ValueError("empty slide selection")
+    return out
+
+
 def _find_repo_root(start: Path) -> Path:
     for candidate in [start] + list(start.parents):
         if (candidate / ".git").exists():
@@ -154,12 +185,30 @@ def _build_slide_prompt(slide: ParsedSlide, global_context: str) -> str:
     return "\n".join(parts).strip() + "\n"
 
 
+def _pick_workdir(base: Path, *, reuse: bool) -> Path:
+    """
+    If `base` already exists and `reuse` is False, create a new version:
+      base-2, base-3, ...
+    """
+    if reuse or not base.exists():
+        return base
+
+    for i in range(2, 10_000):
+        candidate = base.with_name(f"{base.name}-{i}")
+        if not candidate.exists():
+            return candidate
+    raise RuntimeError(f"Could not find an available workdir version for: {base}")
+
+
 def main(argv: Optional[list[str]] = None) -> int:
     p = argparse.ArgumentParser(description="Generate slide images + PDF/PPTX from v2 styled prompts")
     p.add_argument("--prompts", required=True, help="Path to prompts/styled/*.md")
     p.add_argument("--workdir", required=True, help="Work directory (slides written under workdir/slides/)")
     p.add_argument("--pdf", help="Optional PDF output path")
     p.add_argument("--pptx", help="Optional PPTX output path")
+    p.add_argument("--only", help="Only generate a subset of slides (e.g. '3' or '2,5,8' or '5-8')")
+    p.add_argument("--reuse-workdir", action="store_true", help="Reuse workdir if it exists (default is to create workdir-N)")
+    p.add_argument("--allow-empty-global-context", action="store_true", help="Allow styled prompts with no deck-level global context")
     p.add_argument("--api-key", help="OpenRouter API key (or set OPENROUTER_API_KEY / .OPENROUTER_API_KEY)")
     p.add_argument("--no-download", action="store_true", help="Disable downloading http(s) image URLs")
     args = p.parse_args(argv)
@@ -169,7 +218,22 @@ def main(argv: Optional[list[str]] = None) -> int:
         print(f"Prompts file not found: {prompts_path}", file=sys.stderr)
         return 2
 
-    workdir = Path(args.workdir)
+    base_workdir = Path(args.workdir)
+    selected: Optional[set[int]] = None
+    if args.only:
+        try:
+            selected = _parse_only(args.only)
+        except Exception as e:
+            print(f"Invalid --only value: {e}", file=sys.stderr)
+            return 2
+
+    # Default: avoid clobbering previous work. If the user is doing an incremental regeneration,
+    # they'll typically want to reuse the same workdir.
+    reuse_workdir = bool(args.reuse_workdir) or bool(selected)
+    workdir = _pick_workdir(base_workdir, reuse=reuse_workdir)
+    if workdir != base_workdir:
+        print(f"Workdir exists; writing into: {workdir}")
+
     slides_dir = workdir / "slides"
     downloads_dir = workdir / "downloads"
     raster_dir = workdir / "rasterized"
@@ -192,6 +256,27 @@ def main(argv: Optional[list[str]] = None) -> int:
     if not slides:
         print("No slides found in prompts file.", file=sys.stderr)
         return 2
+    if not global_context.strip() and not args.allow_empty_global_context:
+        print(
+            "Styled prompts are missing deck-level global context (text before the first '## Slide N:').\n"
+            "Add a deck-level style/formatting contract at the top of the file, or rerun with --allow-empty-global-context.",
+            file=sys.stderr,
+        )
+        return 2
+
+    indices = [s.index for s in slides]
+    seen: set[int] = set()
+    duplicates: list[int] = []
+    for i in indices:
+        if i in seen:
+            duplicates.append(i)
+        seen.add(i)
+    if duplicates:
+        d = sorted(set(duplicates))
+        print(f"Duplicate slide numbers found: {d}. Slide numbers must be unique.", file=sys.stderr)
+        return 2
+
+    slides = sorted(slides, key=lambda s: s.index)
 
     gen_script = Path(__file__).resolve().parent / "generate_slide_image_ai.py"
     if not gen_script.exists():
@@ -202,6 +287,8 @@ def main(argv: Optional[list[str]] = None) -> int:
     slide_images: list[Path] = []
 
     for slide in slides:
+        if selected is not None and slide.index not in selected:
+            continue
         prompt = _build_slide_prompt(slide, global_context)
 
         attachments: list[Path] = []
@@ -249,7 +336,25 @@ def main(argv: Optional[list[str]] = None) -> int:
         slide_images.append(out_path)
         previous_slide = out_path
 
-    print(f"Found {len(slide_images)} image(s)")
+    if selected is None:
+        print(f"Generated {len(slide_images)} slide image(s)")
+    else:
+        print(f"Generated {len(slide_images)} slide image(s) for --only={args.only}")
+
+    if (args.pdf or args.pptx) and selected is not None:
+        missing: list[int] = []
+        for slide in slides:
+            expected = slides_dir / f"{slide.index:02d}_{_slug(slide.title)}.png"
+            if not expected.exists():
+                missing.append(slide.index)
+        if missing:
+            print(
+                "Cannot assemble full PDF/PPTX because some slide images are missing in the workdir.\n"
+                f"Missing slide(s): {missing}\n"
+                "Tip: rerun without --only, or rerun with --reuse-workdir and keep prior slides in the same workdir.",
+                file=sys.stderr,
+            )
+            return 2
 
     if args.pdf:
         pdf_script = Path(__file__).resolve().parent / "slides_to_pdf.py"
