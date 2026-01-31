@@ -13,7 +13,7 @@ Recommended v2 location: `configs/deck.yaml`
 style: blueprint              # Preset name OR "custom"
 audience: general             # beginners | intermediate | experts | executives | general
 language: auto                # auto | en | zh | ja | etc.
-review: true                  # true = review outline before generation
+review: true                  # true = review prompts (content/styled) before rendering artifacts
 
 ## Custom Dimensions (only when style: custom)
 dimensions:
@@ -68,7 +68,7 @@ custom_styles:
     description: "Optional description"
 ```
 
-Then use with: `/baoyu-slide-deck content.md --style style-name`
+Then use with v2 by setting `style: style-name` in `configs/deck.yaml`. For reproducibility, also keep a matching style brief in `styles/style-name.md`.
 
 ## Minimal Examples
 
@@ -77,6 +77,8 @@ Then use with: `/baoyu-slide-deck content.md --style style-name`
 ```yaml
 style: sketch-notes
 ```
+
+This corresponds to a style brief at `styles/sketch-notes.md`.
 
 ### Prefer no reviews
 
@@ -107,21 +109,6 @@ custom_styles:
     description: "Company brand style"
 ```
 
-## File Locations
+## Location
 
-Priority order (first found wins):
-
-1. `configs/deck.yaml` (project)
-2. `$HOME/.slider/deck.yaml` (user, optional)
-
-## First-Time Setup
-
-When no EXTEND.md exists, the skill prompts for initial preferences:
-
-1. Preferred style (preset or custom)
-2. Default audience
-3. Language preference
-4. Review preference
-5. Save location (project or user)
-
-Creates EXTEND.md at chosen location.
+Recommended v2 location: `configs/deck.yaml` (project).

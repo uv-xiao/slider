@@ -1,13 +1,13 @@
 ---
 name: styled-prompts
-description: "Convert per-page Content PROMPTs into design-complete Styled PROMPTs using a style config, inferring the best layout per page during creation. Outputs prompts/styled/<deck>.md, ready for image/PDF/PPT generation."
+description: "Convert per-page Content PROMPTs into design-complete Styled PROMPTs using a Markdown style brief, inferring the best layout per page during creation. Outputs prompts/styled/<deck>.md, ready for image/PDF/PPT generation."
 ---
 
 # Styled Prompts (Content PROMPT → Styled PROMPT)
 
 ## Goal
 
-Turn `prompts/content/<deck>.md` into `prompts/styled/<deck>.md` by applying a **style configuration** (e.g. `styles/<style>.toml`) and making concrete design decisions per page:
+Turn `prompts/content/<deck>.md` into `prompts/styled/<deck>.md` by applying a **style brief** (e.g. `styles/<style>.md`) and making concrete design decisions per page:
 
 - infer an appropriate layout *during creation* (no fixed layout catalog required)
 - place all content (text, tables, code, figures) so nothing is lost
@@ -17,7 +17,7 @@ Turn `prompts/content/<deck>.md` into `prompts/styled/<deck>.md` by applying a *
 ## Inputs
 
 - `prompts/content/<deck>.md`
-- `styles/<style>.toml` (treat `[GENERAL].style_prompt` as the source of truth for visual identity)
+- `styles/<style>.md` (treat the style brief content as the source of truth for visual identity)
 - Optional: additional references under `references/<style>/` (gitignored)
 - Optional: deck preferences under `configs/deck.yaml` (audience/language/style/dimensions)
 
@@ -31,7 +31,7 @@ Write to: `prompts/styled/<deck>.md`
 - A short **layout decision** (free-form): what regions exist and why (e.g., “title + left bullets + right diagram”)
 - **Element spec** (high detail): every element’s type, content, shape, position, and styling
 - **Rendering notes**: what must be drawn as a diagram/figure vs. literal text
-- **Style constraints**: apply global style config + any slide-specific overrides
+- **Style constraints**: apply global style brief + any slide-specific overrides
 - **Assets**: local image paths to attach, plus how to place them
 
 ## Layout inference guidance (during styling)
@@ -79,13 +79,7 @@ V2 supports a “dimension” vocabulary (ported from archived v1) to describe s
 - `references/dimensions/typography.md`
 - `references/dimensions/density.md`
 
-Preset style briefs live in:
-
-- `styles/presets/*.md`
-
-Preset style configs live in:
-
-- `styles/*.toml` (e.g. `styles/blueprint.toml`)
+Preset style briefs live in `styles/*.md` (e.g. `styles/blueprint.md`).
 
 Config schema reference (optional):
 
@@ -96,7 +90,7 @@ Config schema reference (optional):
 When both exist:
 
 1. Per-deck: `configs/deck.yaml` (audience/language/style/dimensions)
-2. Style file: `styles/<style>.toml` (`[GENERAL].style_prompt` + optional `[DIMENSIONS]`/`[TOKENS]`)
+2. Style file: `styles/<style>.md` (palette/typography/shape language rules; optional Dimensions section)
 3. Defaults: conservative, readable, balanced density
 
 ## Adding vivid/intuitive visuals (icons, illustrations, tables)
@@ -116,8 +110,8 @@ For each slide, prefer at least one “visual anchor” when it improves compreh
 
 ## Suggested workflow (phases)
 
-1. **Load style config**
-   - Treat the style config as constraints (palette, typography, shapes), not a fixed layout catalog.
+1. **Load style brief**
+   - Treat the style brief as constraints (palette, typography, shapes), not a fixed layout catalog.
 2. **Per-slide design**
    - Choose a structure driven by content (comparison/process/metric/code/image).
    - Produce an explicit element inventory (bbox + z-order + content + style).

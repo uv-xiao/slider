@@ -1,37 +1,34 @@
 # Styles (v2)
 
-This folder holds **style configuration** used by v2 skills.
+This folder holds **Markdown style briefs** used by v2 skills.
 
 Unlike v1, v2 styles should not enumerate a fixed layout catalog. Instead, the `styled-prompts` skill infers a per-slide layout during creation and writes an explicit element inventory (positions/shapes/styles).
 
-## Preset styles
+## Presets
 
-Preset style briefs live in `styles/presets/*.md`.
+Preset style briefs live in `styles/*.md` (e.g. `styles/blueprint.md`, `styles/corporate.md`).
 
-Preset style configs live in `styles/*.toml` (e.g. `styles/blueprint.toml`, `styles/corporate.toml`).
+## Recommended format (for `styles/<style>.md`)
 
-Recommended usage:
+Keep it human-readable and “prompt-ready”. A good style brief usually includes:
 
-- Set `style: blueprint` in `configs/deck.yaml`
-- Then pass `styles/blueprint.toml` to `styled-prompts`
+- `# <style-name>` + a one-line tagline
+- `## Design Aesthetic`
+- `## Background` (color + texture)
+- `## Typography` (headline/body guidance)
+- `## Color Palette` (table with hex codes and roles)
+- `## Visual Elements` (icon/illustration/diagram language)
+- `## Style Rules` (Do / Don’t)
+- `## Best For`
 
-Minimal suggested schema:
+Optional (but useful):
 
-```toml
-[GENERAL]
-style = "minimal" # optional
-style_prompt = """...global visual identity..."""
+- `## Dimensions` (texture/mood/typography/density), using the dimension vocabulary:
+  - `.codex/skills/styled-prompts/references/dimensions/presets.md`
+  - `.codex/skills/styled-prompts/references/dimensions/*.md`
 
-[DIMENSIONS]
-# Optional: use the baoyu-style dimension system to describe the visual language.
-# See:
-# - .codex/skills/styled-prompts/references/dimensions/presets.md
-# - .codex/skills/styled-prompts/references/dimensions/*.md
-texture = "clean"
-mood = "professional"
-typography = "geometric"
-density = "balanced"
+## How to use
 
-[TOKENS]
-# Optional: common colors, stroke widths, radii, typography hints, etc.
-```
+1. Choose a preset style file, e.g. `styles/blueprint.md`.
+2. Set `style: blueprint` in `configs/deck.yaml`.
+3. When invoking `$styled-prompts`, pass the style brief file and treat it as constraints (palette/typography/shape language), not as a layout enum.

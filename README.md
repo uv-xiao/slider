@@ -12,7 +12,7 @@ The core idea is to split the problem into two prompt transformations, then gene
 - Skill: `.codex/skills/content-prompts/`
 
 2) **Content Prompt → Styled Prompt** (design + layout inference at creation time)
-- Input: `prompts/content/<deck>.md` + `styles/<style>.toml` (style config)
+- Input: `prompts/content/<deck>.md` + `styles/<style>.md` (style brief)
 - Output: `prompts/styled/<deck>.md`
 - Skill: `.codex/skills/styled-prompts/`
   - The styled prompt should be design-complete: element inventory + positions + shapes, and may add icons/illustrations/tables/diagrams to make content more intuitive.
@@ -37,7 +37,7 @@ Legacy v1 components (slider CLI, layout catalogs, and earlier artifact skills) 
 
 - `materials/`: raw source material (notes, images, scratch docs)
 - `configs/`: v2 deck preferences (audience/language/style/dimensions)
-- `styles/`: style configs (TOML; v2, no fixed layout catalog)
+- `styles/`: style briefs (Markdown; v2, no fixed layout catalog)
 - `prompts/content/`: per-page content prompts (v2)
 - `prompts/styled/`: per-page styled prompts (v2; input to artifact generation)
 - `.codex/skills/`: agent skills (planning, design, generation, validation)

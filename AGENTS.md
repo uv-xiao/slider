@@ -19,7 +19,7 @@ For day-to-day tasks, use the v2 skills:
 
 Examples:
 - "$content-prompts read `materials/mydeck/` and produce `prompts/content/mydeck.md`."
-- "$styled-prompts convert `prompts/content/mydeck.md` + `styles/acme.toml` into `prompts/styled/mydeck.md`."
+- "$styled-prompts convert `prompts/content/mydeck.md` + `styles/acme.md` into `prompts/styled/mydeck.md`."
 - "$styled-artifacts generate images + PDF + PPTX from `prompts/styled/mydeck.md` into `artifacts/mydeck/work/`."
 
 **2. Feature Evolution (delegate freely to Codex):**
@@ -32,7 +32,7 @@ For adding new capabilities, extending workflows, or modifying the repo's archit
 
 Examples:
 - "Codex, let's add support for a new output format `docx`. First, discuss the approach with me."
-- "Codex, extend the style TOML schema to support `animation_hints` per layout. What's your plan?"
+- "Codex, extend the Markdown style brief schema to support `animation_hints`. What's your plan?"
 - "Codex, refactor the prompt rendering logic to support conditional layouts. Let's iterate on the design."
 
 ## Where things live
@@ -41,7 +41,7 @@ Examples:
 - `configs/`: v2 deck preferences (audience/language/style/dimensions)
 - `prompts/content/`: per-page content prompts (v2)
 - `prompts/styled/`: per-page styled prompts (v2; used for image/PDF/PPT generation)
-- `styles/`: style configs (TOML; v2, no fixed layout catalog)
+- `styles/`: style briefs (Markdown; v2, no fixed layout catalog)
 - `references/`: per-style visual references (images/pdfs). This folder is gitignored.
 - `artifacts/`: generated outputs + per-deck workdirs (gitignored)
 - `.codex/skills/`: skills used by agents
@@ -52,7 +52,7 @@ Examples:
 
 1. Put raw material in `materials/<deck>/...`.
 2. Generate per-page content prompts in `prompts/content/<deck>.md` (skill-driven planning, density checks).
-3. Convert to styled prompts in `prompts/styled/<deck>.md` using a style config from `styles/<style>.toml`.
+3. Convert to styled prompts in `prompts/styled/<deck>.md` using a style brief from `styles/<style>.md`.
 4. Generate slide images + PDF/PPTX into `artifacts/<deck>/` (keep intermediates in `artifacts/<deck>/work/`).
 
 ### Archived (v1)

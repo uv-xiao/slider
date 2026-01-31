@@ -26,8 +26,6 @@ Schema reference:
 
 ## Preset styles
 
-Preset briefs: `styles/presets/<style>.md`
-
-Preset configs: `styles/<style>.toml`
+Preset briefs: `styles/<style>.md`
 
 Keep the config in git so the workflow is reproducible.
