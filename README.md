@@ -15,6 +15,7 @@ The core idea is to split the problem into two prompt transformations, then gene
 - Input: `prompts/content/<deck>.md` + `styles/<style>.toml` (style config)
 - Output: `prompts/styled/<deck>.md`
 - Skill: `.codex/skills/styled-prompts/`
+  - The styled prompt should be design-complete: element inventory + positions + shapes, and may add icons/illustrations/tables/diagrams to make content more intuitive.
 
 3) **Styled Prompt → Images + PDF/PPTX**
 - Input: `prompts/styled/<deck>.md`

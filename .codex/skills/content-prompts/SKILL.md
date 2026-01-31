@@ -32,7 +32,7 @@ Format (recommended):
   - **Intent**: why this page exists
   - **Must include**: all facts/claims/code/images that must appear
   - **Optional**: items that can be trimmed if density is too high
-  - **Suggested representations**: bullets vs. diagram vs. table vs. code vs. illustration
+  - **Suggested representations**: bullets vs. diagram vs. table vs. code vs. illustration vs. iconography
   - **Assets**: local file paths / URLs, captions, attribution notes
 
 ## Density and splitting guidance
@@ -49,4 +49,3 @@ Format (recommended):
 - Do not decide final visual layout here (that’s the styling step).
 - Do not invent facts; if a source is ambiguous, mark it as a TODO/question.
 - Keep titles short and information-rich.
-
