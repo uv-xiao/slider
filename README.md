@@ -1,42 +1,61 @@
-# LLM Slides Creation Flow
+# LLM Slide Deck Workflow (Agentic)
 
+This repo is a scaffold for an agent-driven slide workflow that keeps *planning* and *design decisions* inside agent skills, instead of hard-coding page-splitting and layout matching in scripts.
 
-I think with agents (Codex, Claude Code), artifacts creation can be automated with easy programming (skills + documents).
+## Recommended flow (v2)
 
-Let's imagine what is an automatic creation flow: provide contents in Markdown (SPEC), provide prompts about styling and layout (PROMPT), where layout can also be infered from Markdown SPEC, and LLM with skills (SKILLs) generates artifacts (ARTIFACTs)!
+The core idea is to split the problem into two prompt transformations, then generate artifacts:
 
-SPEC + PROMPT ==agent+SKILLs=> ARTIFACTs
+1) **Material → Content Prompt** (content density + intent → per-page plan)
+- Input: `materials/<deck>/...` (raw notes, images, references)
+- Output: `prompts/content/<deck>.md`
+- Skill: `.codex/skills/content-prompts/`
 
-This repo should enable the flow and more auxiliary operations.
+2) **Content Prompt → Styled Prompt** (design + layout inference at creation time)
+- Input: `prompts/content/<deck>.md` + `styles/<style>.toml` (style config)
+- Output: `prompts/styled/<deck>.md`
+- Skill: `.codex/skills/styled-prompts/`
 
-1. SKILL management: we need skills to do replicated works like prompt generation, layout inference, reference information extraction (image, ppt, pdfs), and artifact creation (image, ppt, pdfs). All these should be stored under .codex/skills. When you miss a skill to use, find appropriate ones in skillsmp.com, and let me to download it for you.
-2. PROMPT generation: we don't want to write detailed prompts, instead, we want to generate PROMPTs from some references (images, pdfs, etc). Note that, we want reusble prompts to be used for different SPEC.
-3. ARTIFACT creation: now assuming we have ready PROMPT (styling + supported layouts) and SPEC, we should let agent to create ARTIFACTs. We need another kind of PROMPT, named workflow-prompt, which should be used for all artifact creation, instructing the workflow. Generally, it should analyze SPEC about the appropriate layout to use, and match with the stylish PROMPT, to generate more detailed per-artifact/-page prompt of both contents and style. Then run tools like nanobanana to create the artifacts.
+3) **Styled Prompt → Images + PDF/PPTX**
+- Input: `prompts/styled/<deck>.md`
+- Output workdir: `artifacts/<deck>/work/` (intermediate prompts, images, logs)
+- Final outputs: `artifacts/<deck>/<deck>.pdf` and `artifacts/<deck>/<deck>.pptx`
+- Skill/tooling: `.codex/skills/scientific-slides/` (and/or `.codex/skills/baoyu-slide-deck/`)
 
+### Why this is better than v1
 
-File structure:
+- No redundant “layout matching” step: the styling skill can infer the best layout *while* placing content.
+- Fewer built-in layouts: styles focus on visual identity and constraints; page structure is decided per slide.
+- Workdir keeps everything reproducible and debuggable (`artifacts/<deck>/work/`), without polluting git history.
 
-- references: images or pdfs to learn, one subfolder is one style. Should be .gitignored.
-- styles: holding styles. Each style is one TOML file, with per-layout entries under `[layouts.<layout>]`.
-- .codex/skills: all skills to use. 
-- AGENTs.md: overall prompt to use this repo.
-- and more ...
+## Legacy flow (v1 / slider CLI)
 
-## Quickstart (local)
+The original slider flow is still available for deterministic scaffolding:
 
-Generate per-slide prompts from a Markdown SPEC and a TOML style:
+`SPEC (specs/*.md) + STYLE (styles/*.toml) -> slider render-prompts -> prompts/generated/*.md`
 
-1. Create or edit a spec in `specs/` (see `specs/example.md`).
-2. Pick a style from `styles/`:
-   - `PYTHONPATH=src python3 -m slider list-styles`
-3. Render prompts:
-   - `PYTHONPATH=src python3 -m slider render-prompts --spec specs/example.md --style minimal --out prompts/generated/example.md`
+## Repo structure
 
-If you prefer installing a CLI script:
+- `materials/`: raw source material (notes, images, scratch docs)
+- `specs/`: structured Markdown specs (legacy flow input)
+- `styles/`: style configs (TOML; used by both flows)
+- `prompts/content/`: per-page content prompts (v2)
+- `prompts/styled/`: per-page styled prompts (v2; input to artifact generation)
+- `prompts/generated/`: per-slide prompts rendered from specs (legacy)
+- `prompts/workflow-prompt.md`: reusable workflow prompt template (legacy)
+- `.codex/skills/`: agent skills (planning, design, generation, validation)
+- `artifacts/`: generated workdirs and final outputs (gitignored)
+- `references/`: optional style references (gitignored; keep only README.md in git)
 
-- `python3 -m pip install -e .`
-- `slider list-styles`
-- `slider render-prompts --spec specs/example.md --style minimal --out prompts/generated/example.md`
+## Quickstart (artifact generation)
+
+Install runtime deps (recommended):
+
+- `pixi install`
+
+Generate PDF/PPTX from a styled prompts file:
+
+- `OPENROUTER_API_KEY=... python3 .codex/skills/scientific-slides/scripts/slider_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --out-dir artifacts/<deck> --pdf artifacts/<deck>/<deck>.pdf --pptx artifacts/<deck>/<deck>.pptx`
 
 ## Notes
 

@@ -1,4 +1,6 @@
-# Workflow Prompt (template)
+# Workflow Prompt (template, legacy)
+
+Note: this template is primarily for the legacy `slider render-prompts` flow (SPEC → prompts/generated). The recommended v2 flow uses `prompts/content/*` and `prompts/styled/*` and infers layouts during slide creation.
 
 You are an agent that creates slide artifacts from:
 
@@ -30,4 +32,3 @@ For each slide:
 3. Content (structured)
 4. Visual/style constraints
 5. Any asset notes (image placement, captions, source)
-
