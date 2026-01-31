@@ -55,7 +55,7 @@ Install runtime deps (recommended):
 
 Generate PDF/PPTX from a styled prompts file:
 
-- `OPENROUTER_API_KEY=... python3 .codex/skills/scientific-slides/scripts/slider_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --out-dir artifacts/<deck> --pdf artifacts/<deck>/<deck>.pdf --pptx artifacts/<deck>/<deck>.pptx`
+- `OPENROUTER_API_KEY=... python3 .codex/skills/scientific-slides/scripts/slider_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --out-dir artifacts/<deck>/work --pdf artifacts/<deck>/<deck>.pdf --pptx artifacts/<deck>/<deck>.pptx`
 
 ## Notes
 
