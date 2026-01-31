@@ -24,5 +24,10 @@ Schema reference:
 - `content-prompts`: uses `audience`, `language`, and `density` to decide splitting and per-page intent.
 - `styled-prompts`: uses `style`/`dimensions` to construct the style constraints and choose appropriate visual language.
 
-Keep the config in git so the workflow is reproducible.
+## Preset styles
 
+Preset briefs: `styles/presets/<style>.md`
+
+Preset configs: `styles/<style>.toml`
+
+Keep the config in git so the workflow is reproducible.

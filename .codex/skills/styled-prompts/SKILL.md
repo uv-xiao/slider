@@ -81,7 +81,11 @@ V2 supports a “dimension” vocabulary (ported from archived v1) to describe s
 
 Preset style briefs live in:
 
-- `references/styles/*.md`
+- `styles/presets/*.md`
+
+Preset style configs live in:
+
+- `styles/*.toml` (e.g. `styles/blueprint.toml`)
 
 Config schema reference (optional):
 

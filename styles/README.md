@@ -4,6 +4,17 @@ This folder holds **style configuration** used by v2 skills.
 
 Unlike v1, v2 styles should not enumerate a fixed layout catalog. Instead, the `styled-prompts` skill infers a per-slide layout during creation and writes an explicit element inventory (positions/shapes/styles).
 
+## Preset styles
+
+Preset style briefs live in `styles/presets/*.md`.
+
+Preset style configs live in `styles/*.toml` (e.g. `styles/blueprint.toml`, `styles/corporate.toml`).
+
+Recommended usage:
+
+- Set `style: blueprint` in `configs/deck.yaml`
+- Then pass `styles/blueprint.toml` to `styled-prompts`
+
 Minimal suggested schema:
 
 ```toml
