@@ -29,7 +29,7 @@ Examples:
 
 For adding new capabilities, extending workflows, or modifying the repo's architecture:
 
-- **Delegate to Codex without the `$slider-ops` skill wrapper** so Codex can freely use any skills (e.g., `create-plan`, `Bash`, `Read`, etc.).
+- Codex can freely use any skills (e.g., `create-plan`, `Bash`, `Read`, etc.).
 - The outer agent should engage in **interactive discussion** with Codex about plans, approach, and design decisions.
 - Codex drives the implementation using appropriate skills.
 
