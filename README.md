@@ -93,11 +93,14 @@ Given a styled prompts file `prompts/styled/<deck>.md`, generate images + PDF + 
 ### Two PPTX output types
 
 - **Image PPTX** (`--pptx artifacts/<deck>/<deck>.pptx`): packs generated slide PNGs into PPTX slides (fast, but not truly editable).
-- **Editable PPTX** (`--pptx-editable artifacts/<deck>/<deck>.editable.pptx`): generates editable text/table elements from JSON inventories embedded in the styled prompt. Optionally add `--pptx-editable-with-background` to layer the generated PNG under the editable elements.
+- **Editable PPTX** (`artifacts/<deck>/<deck>.editable.pptx`): generated via the **full `pptx` skill workflow** (HTML→PPTX + thumbnail validation), not via a single `styled-artifacts` script flag.
 
-Editable PPTX can be generated without any image generation if you don’t need PNG/PDF/image-PPTX:
+Editable PPTX workflow (recommended):
 
-- `python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --skip-slide-images --pptx-editable artifacts/<deck>/<deck>.editable.pptx --allow-empty-global-context`
+1. Use `prompts/styled/<deck>.md` as the source of truth for geometry/content.
+2. Write one HTML file per slide under `artifacts/<deck>/work/pptx-html/` following `.codex/skills/pptx/html2pptx.md` (body size `720pt × 405pt`).
+3. Use the `pptx` skill’s html2pptx workflow to create `artifacts/<deck>/<deck>.editable.pptx`.
+4. Validate with `.codex/skills/pptx/scripts/thumbnail.py` and iterate until there is no cutoff/overlap.
 
 ### Existing output behavior (workdir versioning)
 

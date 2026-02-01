@@ -485,16 +485,13 @@ Required dependencies (should already be installed):
 
 ## Repo integration: v2 editable PPTX (styled prompts → PPTX)
 
-This repo’s v2 workflow can generate an *editable* PPTX from `prompts/styled/*.md` when each slide includes a machine-readable element inventory.
+For this repo’s v2 workflow, “editable PPTX” means generating native PowerPoint elements (text boxes, shapes, tables) rather than packing slide PNGs.
 
-Script:
+Recommended workflow (use the full `html2pptx` process + visual validation):
 
-- `python3 .codex/skills/pptx/scripts/styled_prompts_to_editable_pptx.py --prompts prompts/styled/<deck>.md --out artifacts/<deck>/<deck>.editable.pptx`
-
-Optional: layer generated slide PNGs as a background:
-
-- `... --background-images-dir artifacts/<deck>/work/slides`
-
-The inventory is expected as a ` ```json ... ``` ` code fence inside each `## Slide N:` block. See:
-
-- `.codex/skills/styled-prompts/references/element-spec-template.md`
+1. Use `prompts/styled/<deck>.md` as the source of truth for content and geometry.
+2. Create one HTML file per slide under `artifacts/<deck>/work/pptx-html/` following `.codex/skills/pptx/html2pptx.md`.
+   - Body size must be `720pt × 405pt` for 16:9.
+   - All text must be inside `<p>`, `<h1>`-`<h6>`, `<ul>`, `<ol>`.
+3. Write a small Node runner that uses `.codex/skills/pptx/scripts/html2pptx.js` (library) to convert the HTML slides into `artifacts/<deck>/<deck>.editable.pptx`.
+4. Validate visually with `.codex/skills/pptx/scripts/thumbnail.py` and iterate until there is no cutoff/overlap.

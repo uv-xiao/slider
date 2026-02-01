@@ -11,14 +11,6 @@ Generate all artifacts into a per-deck workdir:
 
 - `OPENROUTER_API_KEY=... python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --pdf artifacts/<deck>/<deck>.pdf --pptx artifacts/<deck>/<deck>.pptx`
 
-Editable PPTX (native elements) is a separate optional output:
-
-- `OPENROUTER_API_KEY=... python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --pptx-editable artifacts/<deck>/<deck>.editable.pptx`
-
-Editable-only (skip image generation):
-
-- `python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --skip-slide-images --pptx-editable artifacts/<deck>/<deck>.editable.pptx --allow-empty-global-context`
-
 ## Workflow (recommended)
 
 1. Generate slide images into `artifacts/<deck>/work/slides/`.
@@ -57,7 +49,17 @@ If you pass `--pdf/--pptx` together with `--only`, the script expects the other 
 - If a slide references `.svg` images, they are rasterized before being sent to image models (some providers reject SVG inputs).
 - PPTX outputs:
   - **Image PPTX** (`--pptx`): slide images packaged into a PPTX (fast; not truly editable).
-  - **Editable PPTX** (`--pptx-editable`): generates an editable PPTX from JSON element inventories embedded in the styled prompt. Optionally layer the generated slide PNG as a background with `--pptx-editable-with-background`.
+
+## Editable PPTX (use `$pptx` skill)
+
+For an actually-editable PPTX (native text boxes, tables, shapes), use the `pptx` skill’s full workflow (HTML→PPTX and thumbnail validation). `styled-artifacts` intentionally does not attempt to auto-generate editable PPTX via a single script.
+
+Recommended approach:
+
+1. Use the styled prompt (`prompts/styled/<deck>.md`) as source of truth for slide geometry and content.
+2. Create one HTML file per slide under `artifacts/<deck>/work/pptx-html/` using the rules in `.codex/skills/pptx/html2pptx.md` (body size `720pt × 405pt`).
+3. Use `pptx` skill’s html2pptx workflow to convert HTML slides into `artifacts/<deck>/<deck>.editable.pptx`.
+4. Run `.codex/skills/pptx/scripts/thumbnail.py` to visually validate and iterate until there is no cutoff/overlap.
 
 References:
 - `references/consistency-protocol.md`

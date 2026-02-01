@@ -11,7 +11,8 @@ Produce a **plan only** (no file edits, no rendering) that routes the user reque
 
 - `content-prompts` → material → `prompts/content/<deck>.md`
 - `styled-prompts` → content prompt + style brief → `prompts/styled/<deck>.md`
-- `styled-artifacts` → styled prompt → images + `artifacts/<deck>/<deck>.pdf` / `artifacts/<deck>/<deck>.pptx`
+- `styled-artifacts` → styled prompt → images + `artifacts/<deck>/<deck>.pdf` / image-PPTX `artifacts/<deck>/<deck>.pptx`
+- `pptx` → styled prompt → **editable** PPTX `artifacts/<deck>/<deck>.editable.pptx` (HTML→PPTX workflow + thumbnail validation)
 
 The plan must be written in the same format as the `create-plan` skill template.
 
@@ -27,7 +28,8 @@ Decide the stopping point from the requested output:
 
 - Wants **Content PROMPT** → stop after `content-prompts`
 - Wants **Styled PROMPT** → stop after `styled-prompts`
-- Wants **PDF/PPTX/images** → include `styled-artifacts`
+- Wants **PDF / images / image-PPTX** → include `styled-artifacts`
+- Wants **editable PPTX** → include `pptx` after `styled-prompts` (and optionally after `styled-artifacts` if they also want slide PNGs/PDF)
 
 ## Style selection (v2)
 

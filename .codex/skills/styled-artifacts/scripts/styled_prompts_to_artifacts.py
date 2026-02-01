@@ -206,17 +206,6 @@ def main(argv: Optional[list[str]] = None) -> int:
     p.add_argument("--workdir", required=True, help="Work directory (slides written under workdir/slides/)")
     p.add_argument("--pdf", help="Optional PDF output path")
     p.add_argument("--pptx", help="Optional PPTX output path")
-    p.add_argument("--pptx-editable", help="Optional editable PPTX output path (requires JSON element inventories in styled prompts)")
-    p.add_argument(
-        "--pptx-editable-with-background",
-        action="store_true",
-        help="For --pptx-editable: place generated slide PNGs as a background layer under editable elements",
-    )
-    p.add_argument(
-        "--skip-slide-images",
-        action="store_true",
-        help="Skip slide PNG generation (useful for editable PPTX only). Incompatible with --pdf/--pptx/--pptx-editable-with-background.",
-    )
     p.add_argument("--only", help="Only generate a subset of slides (e.g. '3' or '2,5,8' or '5-8')")
     p.add_argument("--reuse-workdir", action="store_true", help="Reuse workdir if it exists (default is to create workdir-N)")
     p.add_argument("--allow-empty-global-context", action="store_true", help="Allow styled prompts with no deck-level global context")
@@ -299,13 +288,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     previous_slide: Optional[Path] = None
     slide_images: list[Path] = []
 
-    needs_slide_images = bool(args.pdf) or bool(args.pptx) or bool(args.pptx_editable_with_background) or not bool(args.skip_slide_images)
-    if args.skip_slide_images and (args.pdf or args.pptx or args.pptx_editable_with_background):
-        print(
-            "--skip-slide-images is incompatible with --pdf/--pptx/--pptx-editable-with-background.",
-            file=sys.stderr,
-        )
-        return 2
+    needs_slide_images = bool(args.pdf) or bool(args.pptx)
 
     if needs_slide_images:
         for slide in slides:
@@ -363,7 +346,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         else:
             print(f"Generated {len(slide_images)} slide image(s) for --only={args.only}")
 
-    requires_full_deck_images = bool(args.pdf) or bool(args.pptx) or bool(args.pptx_editable_with_background)
+    requires_full_deck_images = bool(args.pdf) or bool(args.pptx)
     if requires_full_deck_images and selected is not None:
         missing: list[int] = []
         for slide in slides:
@@ -389,16 +372,6 @@ def main(argv: Optional[list[str]] = None) -> int:
             print(f"Missing PPTX builder from pptx skill: {ppt_script}", file=sys.stderr)
             return 2
         subprocess.run([sys.executable, str(ppt_script), str(slides_dir), "-o", str(Path(args.pptx))], check=True)
-
-    if args.pptx_editable:
-        editable_script = repo_root / ".codex" / "skills" / "pptx" / "scripts" / "styled_prompts_to_editable_pptx.py"
-        if not editable_script.exists():
-            print(f"Missing editable PPTX builder from pptx skill: {editable_script}", file=sys.stderr)
-            return 2
-        cmd = [sys.executable, str(editable_script), "--prompts", str(prompts_path), "--out", str(Path(args.pptx_editable))]
-        if args.pptx_editable_with_background:
-            cmd.extend(["--background-images-dir", str(slides_dir)])
-        subprocess.run(cmd, check=True)
 
     return 0
 
