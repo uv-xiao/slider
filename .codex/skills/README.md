@@ -17,5 +17,6 @@ Repo skills:
 - `content-prompts`: convert raw material into per-page content prompts (`prompts/content/*`)
 - `styled-prompts`: convert content prompts into design-complete prompts (`prompts/styled/*`)
 - `styled-artifacts`: generate images + PDF/PPTX from `prompts/styled/*` into `artifacts/<deck>/work/`
+- `pptx`: PowerPoint creation/editing utilities (used by `styled-artifacts` for PPTX assembly)
 
 Archived (v1) skills live under `archieve/v1/.codex/skills/`.

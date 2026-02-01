@@ -26,3 +26,7 @@ build/
 !.pixi/config.toml
 
 .*KEY
+
+# Local agent tooling (should not be committed)
+.agents/
+.codex/skills/find-skills

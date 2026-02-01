@@ -361,7 +361,10 @@ def main(argv: Optional[list[str]] = None) -> int:
         subprocess.run([sys.executable, str(pdf_script), str(slides_dir), "-o", str(Path(args.pdf))], check=True)
 
     if args.pptx:
-        ppt_script = Path(__file__).resolve().parent / "slides_to_pptx.py"
+        ppt_script = repo_root / ".codex" / "skills" / "pptx" / "scripts" / "images_to_pptx.py"
+        if not ppt_script.exists():
+            print(f"Missing PPTX builder from pptx skill: {ppt_script}", file=sys.stderr)
+            return 2
         subprocess.run([sys.executable, str(ppt_script), str(slides_dir), "-o", str(Path(args.pptx))], check=True)
 
     return 0

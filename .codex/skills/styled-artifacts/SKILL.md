@@ -47,6 +47,7 @@ If you pass `--pdf/--pptx` together with `--only`, the script expects the other 
 - Expects `prompts/styled/*.md` to contain blocks like `## Slide N: Title`.
 - Keeps intermediate slide PNGs and logs under `artifacts/<deck>/work/`.
 - If a slide references `.svg` images, they are rasterized before being sent to image models (some providers reject SVG inputs).
+- PPTX assembly uses the repo’s `pptx` skill script (`.codex/skills/pptx/scripts/images_to_pptx.py`).
 
 References:
 - `references/consistency-protocol.md`
