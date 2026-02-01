@@ -206,6 +206,17 @@ def main(argv: Optional[list[str]] = None) -> int:
     p.add_argument("--workdir", required=True, help="Work directory (slides written under workdir/slides/)")
     p.add_argument("--pdf", help="Optional PDF output path")
     p.add_argument("--pptx", help="Optional PPTX output path")
+    p.add_argument("--pptx-editable", help="Optional editable PPTX output path (requires JSON element inventories in styled prompts)")
+    p.add_argument(
+        "--pptx-editable-with-background",
+        action="store_true",
+        help="For --pptx-editable: place generated slide PNGs as a background layer under editable elements",
+    )
+    p.add_argument(
+        "--skip-slide-images",
+        action="store_true",
+        help="Skip slide PNG generation (useful for editable PPTX only). Incompatible with --pdf/--pptx/--pptx-editable-with-background.",
+    )
     p.add_argument("--only", help="Only generate a subset of slides (e.g. '3' or '2,5,8' or '5-8')")
     p.add_argument("--reuse-workdir", action="store_true", help="Reuse workdir if it exists (default is to create workdir-N)")
     p.add_argument("--allow-empty-global-context", action="store_true", help="Allow styled prompts with no deck-level global context")
@@ -239,7 +250,9 @@ def main(argv: Optional[list[str]] = None) -> int:
     raster_dir = workdir / "rasterized"
     slides_dir.mkdir(parents=True, exist_ok=True)
 
-    repo_root = _find_repo_root(prompts_path.parent)
+    # Prefer resolving the repo root from this script's location so the tool
+    # works even when --prompts points outside the repo (e.g. /tmp during tests).
+    repo_root = _find_repo_root(Path(__file__).resolve().parent)
 
     # Allow key stored in repo root for local runs.
     if not args.api_key:
@@ -286,62 +299,72 @@ def main(argv: Optional[list[str]] = None) -> int:
     previous_slide: Optional[Path] = None
     slide_images: list[Path] = []
 
-    for slide in slides:
-        if selected is not None and slide.index not in selected:
-            continue
-        prompt = _build_slide_prompt(slide, global_context)
+    needs_slide_images = bool(args.pdf) or bool(args.pptx) or bool(args.pptx_editable_with_background) or not bool(args.skip_slide_images)
+    if args.skip_slide_images and (args.pdf or args.pptx or args.pptx_editable_with_background):
+        print(
+            "--skip-slide-images is incompatible with --pdf/--pptx/--pptx-editable-with-background.",
+            file=sys.stderr,
+        )
+        return 2
 
-        attachments: list[Path] = []
-        if previous_slide and previous_slide.exists():
-            attachments.append(previous_slide)
-
-        for alt, src in slide.images:
-            resolved = _resolve_attachment(
-                repo_root,
-                prompts_path,
-                src,
-                downloads_dir,
-                allow_download=not args.no_download,
-            )
-            if resolved is None:
-                print(f"Warning: could not resolve image '{src}' for slide {slide.index} ({alt})")
+    if needs_slide_images:
+        for slide in slides:
+            if selected is not None and slide.index not in selected:
                 continue
-            attachments.append(_normalize_attachment(resolved, raster_dir=raster_dir))
+            prompt = _build_slide_prompt(slide, global_context)
 
-        out_name = f"{slide.index:02d}_{_slug(slide.title)}.png"
-        out_path = slides_dir / out_name
+            attachments: list[Path] = []
+            if previous_slide and previous_slide.exists():
+                attachments.append(previous_slide)
 
-        cmd = [sys.executable, str(gen_script), prompt, "-o", str(out_path)]
-        if args.api_key:
-            cmd.extend(["--api-key", args.api_key])
-        for a in attachments:
-            cmd.extend(["--attach", str(a)])
+            for alt, src in slide.images:
+                resolved = _resolve_attachment(
+                    repo_root,
+                    prompts_path,
+                    src,
+                    downloads_dir,
+                    allow_download=not args.no_download,
+                )
+                if resolved is None:
+                    print(f"Warning: could not resolve image '{src}' for slide {slide.index} ({alt})")
+                    continue
+                attachments.append(_normalize_attachment(resolved, raster_dir=raster_dir))
 
-        print("\n" + "=" * 60)
-        print("Generating Slide Image")
-        print("=" * 60)
-        print(f"Slide title: {slide.title}")
-        if attachments:
-            print(f"Attachments: {len(attachments)} file(s)")
+            out_name = f"{slide.index:02d}_{_slug(slide.title)}.png"
+            out_path = slides_dir / out_name
+
+            cmd = [sys.executable, str(gen_script), prompt, "-o", str(out_path)]
+            if args.api_key:
+                cmd.extend(["--api-key", args.api_key])
             for a in attachments:
-                print(f"  - {a}")
-        print(f"Output: {out_path}")
-        print("=" * 60 + "\n")
+                cmd.extend(["--attach", str(a)])
 
-        proc = subprocess.run(cmd)
-        if proc.returncode != 0:
-            print("✗ Generation failed.", file=sys.stderr)
-            return int(proc.returncode)
+            print("\n" + "=" * 60)
+            print("Generating Slide Image")
+            print("=" * 60)
+            print(f"Slide title: {slide.title}")
+            if attachments:
+                print(f"Attachments: {len(attachments)} file(s)")
+                for a in attachments:
+                    print(f"  - {a}")
+            print(f"Output: {out_path}")
+            print("=" * 60 + "\n")
 
-        slide_images.append(out_path)
-        previous_slide = out_path
+            proc = subprocess.run(cmd)
+            if proc.returncode != 0:
+                print("✗ Generation failed.", file=sys.stderr)
+                return int(proc.returncode)
 
-    if selected is None:
-        print(f"Generated {len(slide_images)} slide image(s)")
-    else:
-        print(f"Generated {len(slide_images)} slide image(s) for --only={args.only}")
+            slide_images.append(out_path)
+            previous_slide = out_path
 
-    if (args.pdf or args.pptx) and selected is not None:
+        if selected is None:
+            print(f"Generated {len(slide_images)} slide image(s)")
+        else:
+            print(f"Generated {len(slide_images)} slide image(s) for --only={args.only}")
+
+    requires_full_deck_images = bool(args.pdf) or bool(args.pptx) or bool(args.pptx_editable_with_background)
+    if requires_full_deck_images and selected is not None:
         missing: list[int] = []
         for slide in slides:
             expected = slides_dir / f"{slide.index:02d}_{_slug(slide.title)}.png"
@@ -366,6 +389,16 @@ def main(argv: Optional[list[str]] = None) -> int:
             print(f"Missing PPTX builder from pptx skill: {ppt_script}", file=sys.stderr)
             return 2
         subprocess.run([sys.executable, str(ppt_script), str(slides_dir), "-o", str(Path(args.pptx))], check=True)
+
+    if args.pptx_editable:
+        editable_script = repo_root / ".codex" / "skills" / "pptx" / "scripts" / "styled_prompts_to_editable_pptx.py"
+        if not editable_script.exists():
+            print(f"Missing editable PPTX builder from pptx skill: {editable_script}", file=sys.stderr)
+            return 2
+        cmd = [sys.executable, str(editable_script), "--prompts", str(prompts_path), "--out", str(Path(args.pptx_editable))]
+        if args.pptx_editable_with_background:
+            cmd.extend(["--background-images-dir", str(slides_dir)])
+        subprocess.run(cmd, check=True)
 
     return 0
 

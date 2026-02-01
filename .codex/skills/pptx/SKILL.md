@@ -482,3 +482,19 @@ Required dependencies (should already be installed):
 - **LibreOffice**: `sudo apt-get install libreoffice` (for PDF conversion)
 - **Poppler**: `sudo apt-get install poppler-utils` (for pdftoppm to convert PDF to images)
 - **defusedxml**: `pip install defusedxml` (for secure XML parsing)
+
+## Repo integration: v2 editable PPTX (styled prompts → PPTX)
+
+This repo’s v2 workflow can generate an *editable* PPTX from `prompts/styled/*.md` when each slide includes a machine-readable element inventory.
+
+Script:
+
+- `python3 .codex/skills/pptx/scripts/styled_prompts_to_editable_pptx.py --prompts prompts/styled/<deck>.md --out artifacts/<deck>/<deck>.editable.pptx`
+
+Optional: layer generated slide PNGs as a background:
+
+- `... --background-images-dir artifacts/<deck>/work/slides`
+
+The inventory is expected as a ` ```json ... ``` ` code fence inside each `## Slide N:` block. See:
+
+- `.codex/skills/styled-prompts/references/element-spec-template.md`

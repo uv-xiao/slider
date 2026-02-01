@@ -11,6 +11,14 @@ Generate all artifacts into a per-deck workdir:
 
 - `OPENROUTER_API_KEY=... python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --pdf artifacts/<deck>/<deck>.pdf --pptx artifacts/<deck>/<deck>.pptx`
 
+Editable PPTX (native elements) is a separate optional output:
+
+- `OPENROUTER_API_KEY=... python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --pptx-editable artifacts/<deck>/<deck>.editable.pptx`
+
+Editable-only (skip image generation):
+
+- `python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --skip-slide-images --pptx-editable artifacts/<deck>/<deck>.editable.pptx --allow-empty-global-context`
+
 ## Workflow (recommended)
 
 1. Generate slide images into `artifacts/<deck>/work/slides/`.
@@ -47,7 +55,9 @@ If you pass `--pdf/--pptx` together with `--only`, the script expects the other 
 - Expects `prompts/styled/*.md` to contain blocks like `## Slide N: Title`.
 - Keeps intermediate slide PNGs and logs under `artifacts/<deck>/work/`.
 - If a slide references `.svg` images, they are rasterized before being sent to image models (some providers reject SVG inputs).
-- PPTX assembly uses the repo’s `pptx` skill script (`.codex/skills/pptx/scripts/images_to_pptx.py`).
+- PPTX outputs:
+  - **Image PPTX** (`--pptx`): slide images packaged into a PPTX (fast; not truly editable).
+  - **Editable PPTX** (`--pptx-editable`): generates an editable PPTX from JSON element inventories embedded in the styled prompt. Optionally layer the generated slide PNG as a background with `--pptx-editable-with-background`.
 
 References:
 - `references/consistency-protocol.md`

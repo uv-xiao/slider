@@ -90,6 +90,15 @@ Given a styled prompts file `prompts/styled/<deck>.md`, generate images + PDF + 
 
 - `OPENROUTER_API_KEY=... python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --pdf artifacts/<deck>/<deck>.pdf --pptx artifacts/<deck>/<deck>.pptx`
 
+### Two PPTX output types
+
+- **Image PPTX** (`--pptx artifacts/<deck>/<deck>.pptx`): packs generated slide PNGs into PPTX slides (fast, but not truly editable).
+- **Editable PPTX** (`--pptx-editable artifacts/<deck>/<deck>.editable.pptx`): generates editable text/table elements from JSON inventories embedded in the styled prompt. Optionally add `--pptx-editable-with-background` to layer the generated PNG under the editable elements.
+
+Editable PPTX can be generated without any image generation if you don’t need PNG/PDF/image-PPTX:
+
+- `python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --skip-slide-images --pptx-editable artifacts/<deck>/<deck>.editable.pptx --allow-empty-global-context`
+
 ### Existing output behavior (workdir versioning)
 
 To avoid clobbering previous outputs, the script auto-versions the workdir:
