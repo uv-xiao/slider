@@ -1,9 +1,7 @@
-# Local style references (images/pdfs) and generated artifacts
+# Local style references (images/pdfs)
 references/**
 !references/README.md
 
-artifacts/**
-!artifacts/README.md
 
 # Python
 __pycache__/

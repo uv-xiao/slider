@@ -54,12 +54,26 @@ If you pass `--pdf/--pptx` together with `--only`, the script expects the other 
 
 For an actually-editable PPTX (native text boxes, tables, shapes), use the `pptx` skill’s full workflow (HTML→PPTX and thumbnail validation). `styled-artifacts` intentionally does not attempt to auto-generate editable PPTX via a single script.
 
+Important clarification:
+
+- Once you have an editable PPTX output file (e.g. `artifacts/<deck>/<deck>.editable.pptx`), you are **done**.
+- “Rebuild” is only for **iteration**:
+  - If you want the PPTX to remain reproducible from HTML/CSS, edit the HTML sources and rerun the builder.
+  - If you just want to tweak content/layout manually, open the PPTX in PowerPoint/Keynote and edit directly (no rebuild needed).
+
+
 Recommended approach:
 
 1. Use the styled prompt (`prompts/styled/<deck>.md`) as source of truth for slide geometry and content.
 2. Create one HTML file per slide under `artifacts/<deck>/work/pptx-html/` using the rules in `.codex/skills/pptx/html2pptx.md` (body size `720pt × 405pt`).
 3. Use `pptx` skill’s html2pptx workflow to convert HTML slides into `artifacts/<deck>/<deck>.editable.pptx`.
 4. Run `.codex/skills/pptx/scripts/thumbnail.py` to visually validate and iterate until there is no cutoff/overlap.
+
+
+Quality note:
+
+- Editable PPTX can look less “styled” than image-rendered PDF/PPTX, because it is limited by web-safe fonts and PPTX element primitives.
+- If fidelity is unacceptable, iterate on the **Styled PROMPT** first, then use `$pptx` to redesign the HTML/CSS (or switch to a template-based PPTX workflow).
 
 References:
 - `references/consistency-protocol.md`
@@ -79,3 +93,5 @@ Recommended next steps (include this block in your response):
 - **Iterate cheaply** (after editing `prompts/styled/<deck>.md`):
   - `OPENROUTER_API_KEY=... python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --reuse-workdir --only 7`
 - **Editable PPTX** (if requested): invoke `$pptx` and follow `.codex/skills/pptx/html2pptx.md`.
+  - If you already have `artifacts/<deck>/<deck>.editable.pptx`, **stop here**.
+  - Rebuild only if you’re iterating via HTML/CSS (otherwise just edit the PPTX directly in PowerPoint).
