@@ -30,3 +30,6 @@ build/
 # Local agent tooling (should not be committed)
 .agents/
 .codex/skills/find-skills
+
+# Node
+node_modules/

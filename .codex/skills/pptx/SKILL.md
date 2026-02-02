@@ -494,6 +494,15 @@ PPTX work in this repo typically touches **both** Python tooling (thumbnailing /
 - **LibreOffice / soffice** (PPTX → PDF conversion used by `scripts/thumbnail.py`)
 - **Poppler utils** (`pdftoppm`, used by `scripts/thumbnail.py`)
 
+## Pixi (recommended for this repo)
+
+If you are working inside this `slider` repo, prefer using Pixi to manage the Python + system deps, and to orchestrate Node installs:
+
+- Install the environment: `pixi install`
+- Install Node deps for html2pptx: `pixi run pptx-setup`
+- Run styled artifacts: `pixi run make-artifacts -- --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --pdf artifacts/<deck>/<deck>.pdf --pptx artifacts/<deck>/<deck>.pptx`
+- Visual thumbnail validation: `pixi run pptx-thumb -- artifacts/<deck>/<deck>.editable.pptx artifacts/<deck>/work/thumbnails --cols 4`
+
 ## Repo integration: v2 editable PPTX (styled prompts → PPTX)
 
 For this repo’s v2 workflow, “editable PPTX” means generating native PowerPoint elements (text boxes, shapes, tables) rather than packing slide PNGs.
