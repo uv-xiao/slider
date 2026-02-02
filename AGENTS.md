@@ -66,4 +66,4 @@ Review policy:
 
 ### Archived (v1)
 
-Legacy v1 components live under `archieve/v1/`.
+Legacy v1 components live under `archive/v1/`.

@@ -145,7 +145,7 @@ See `.codex/skills/styled-prompts/references/element-spec-template.md`.
 
 ## Archived v1
 
-Legacy v1 components (slider CLI, layout catalogs, and earlier artifact skills) are kept under `archieve/v1/` for reference.
+Legacy v1 components (slider CLI, layout catalogs, and earlier artifact skills) are kept under `archive/v1/` for reference.
 
 ## Repo structure
 
@@ -158,7 +158,7 @@ Legacy v1 components (slider CLI, layout catalogs, and earlier artifact skills) 
 - `artifacts/`: generated workdirs and final outputs (gitignored)
 - `references/`: optional style references (gitignored; keep only README.md in git)
 
-Legacy v1 folders (e.g. `specs/`, `prompts/generated/`, older skills) are under `archieve/v1/`.
+Legacy v1 folders (e.g. `specs/`, `prompts/generated/`, older skills) are under `archive/v1/`.
 
 ## Notes
 
