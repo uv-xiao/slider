@@ -158,3 +158,25 @@ Do not proceed to `styled-artifacts` until the styled prompt passes:
 - All “Must include” items from the content prompt are present
 - No illegible density (split instead of shrinking)
 - Icons/illustrations are consistent and meaningful (not decoration)
+
+## Completion behavior (required)
+
+When this skill is triggered:
+
+1. **Do only this step**: produce/update `prompts/styled/<deck>.md`.
+2. **Do not render anything** here (no images/PDF/PPTX, no render sanity-checks). Rendering belongs to `$styled-artifacts`.
+3. **End your response with recommended next steps** (options + commands to run next).
+
+Recommended next steps (include this block in your response):
+
+- **Review gate (required before rendering)**: confirm the Styled PROMPT passes the checklist in this skill.
+- **Next (render PDF / image-PPTX)**: run `$styled-artifacts`.
+  - PDF + image-PPTX:
+    - `OPENROUTER_API_KEY=... python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --pdf artifacts/<deck>/<deck>.pdf --pptx artifacts/<deck>/<deck>.pptx`
+  - Sample / partial regeneration:
+    - `... --reuse-workdir --only 1-3`
+- **Next (editable PPTX)**: invoke `$pptx` and follow the full HTML→PPTX workflow.
+  - Minimal dependency commands (local, per-workdir):
+    - `cd artifacts/<deck>/work/pptx-html && npm init -y && npm install pptxgenjs playwright sharp && npx playwright install chromium`
+  - Visual validation:
+    - `python3 .codex/skills/pptx/scripts/thumbnail.py artifacts/<deck>/<deck>.editable.pptx artifacts/<deck>/work/thumbnails --cols 4`

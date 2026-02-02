@@ -472,16 +472,27 @@ pdftoppm -jpeg -r 150 -f 2 -l 5 template.pdf slide  # Converts only pages 2-5
 
 ## Dependencies
 
-Required dependencies (should already be installed):
+PPTX work in this repo typically touches **both** Python tooling (thumbnailing / OOXML validation / image-PPTX) and Node tooling (html2pptx → editable PPTX).
 
-- **markitdown**: `pip install "markitdown[pptx]"` (for text extraction from presentations)
-- **pptxgenjs**: `npm install -g pptxgenjs` (for creating presentations via html2pptx)
-- **playwright**: `npm install -g playwright` (for HTML rendering in html2pptx)
-- **react-icons**: `npm install -g react-icons react react-dom` (for icons)
-- **sharp**: `npm install -g sharp` (for SVG rasterization and image processing)
-- **LibreOffice**: `sudo apt-get install libreoffice` (for PDF conversion)
-- **Poppler**: `sudo apt-get install poppler-utils` (for pdftoppm to convert PDF to images)
-- **defusedxml**: `pip install defusedxml` (for secure XML parsing)
+### Python
+
+- `pip install "markitdown[pptx]"` (text extraction)
+- `pip install python-pptx Pillow` (thumbnailing and image-PPTX helpers)
+- `pip install lxml defusedxml` (OOXML parsing + safe XML parsing)
+
+### Node (for html2pptx / editable PPTX)
+
+- Node.js + npm
+- `npm install -g pptxgenjs` (PowerPoint generation)
+- `npm install -g playwright` (HTML rendering)
+- `npx playwright install chromium` (install browser used by Playwright)
+- `npm install -g sharp` (SVG rasterization / image processing)
+- `npm install -g react react-dom react-icons` (icon rendering)
+
+### System packages (for visual validation thumbnails)
+
+- **LibreOffice / soffice** (PPTX → PDF conversion used by `scripts/thumbnail.py`)
+- **Poppler utils** (`pdftoppm`, used by `scripts/thumbnail.py`)
 
 ## Repo integration: v2 editable PPTX (styled prompts → PPTX)
 
@@ -495,3 +506,17 @@ Recommended workflow (use the full `html2pptx` process + visual validation):
    - All text must be inside `<p>`, `<h1>`-`<h6>`, `<ul>`, `<ol>`.
 3. Write a small Node runner that uses `.codex/skills/pptx/scripts/html2pptx.js` (library) to convert the HTML slides into `artifacts/<deck>/<deck>.editable.pptx`.
 4. Validate visually with `.codex/skills/pptx/scripts/thumbnail.py` and iterate until there is no cutoff/overlap.
+
+## Completion behavior (required)
+
+When this skill is triggered:
+
+1. **Do only the PPTX task requested** (create / edit / validate).
+2. **Do not invoke upstream/downstream slider v2 skills** (`$content-prompts`, `$styled-prompts`, `$styled-artifacts`) unless explicitly requested.
+3. **End your response with recommended next steps** (options + commands to run next).
+
+Recommended next steps (include this block in your response):
+
+- **Visual validation (recommended)**:
+  - `python3 .codex/skills/pptx/scripts/thumbnail.py <file.pptx> artifacts/<deck>/work/thumbnails --cols 4`
+- **If using html2pptx**: iterate by editing HTML/CSS, regenerate PPTX, then rerun `thumbnail.py`.

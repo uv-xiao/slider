@@ -57,3 +57,11 @@ Output only a plan, using the exact template structure:
 
 - Routing cheatsheet: `references/routing.md`
 - Example plans: `references/examples.md`
+
+## Completion behavior (required)
+
+When this skill is triggered:
+
+1. **Do only this step**: output a plan (no file edits, no rendering).
+2. The plan must include the **exact next skill invocations** and any **CLI commands** needed.
+3. Do not execute the plan steps automatically.

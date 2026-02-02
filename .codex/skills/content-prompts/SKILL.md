@@ -110,3 +110,23 @@ Treat `prompts/content/<deck>.md` as the single source of truth for planning.
 - **Split a page**: duplicate the page section into `Page N` and `Page N (cont.)`, then re-check density and intent.
 - **Merge pages**: merge only if they share one intent and one primary representation.
 - After edits, re-run the “Review gate” checklist before moving on to styling.
+
+## Completion behavior (required)
+
+When this skill is triggered:
+
+1. **Do only this step**: produce/update `prompts/content/<deck>.md`.
+2. **Do not run downstream steps** (no `$styled-prompts`, no `$styled-artifacts`, no rendering sanity-checks) unless the user explicitly requested them in the same message.
+3. **End your response with recommended next steps** (options + commands to run next).
+
+Recommended next steps (include this block in your response):
+
+- **Review gate (required before styling)**: confirm the Content PROMPT passes the checklist in this skill.
+- **Next (create Styled PROMPT)**: run `$styled-prompts` on the generated file.
+  - Style selection options:
+    - Use `configs/deck.yaml` (`style:`) if present
+    - Or pick a preset: `styles/blueprint.md`, `styles/chalkboard.md`, `styles/sketch-notes.md`, ...
+  - Recommended invocation:
+    - `$styled-prompts convert prompts/content/<deck>.md + styles/<style>.md into prompts/styled/<deck>.md.`
+
+If the user requested only a **sample** (e.g. 4 pages), recommend validating the sample first, then rerunning this skill for full coverage.

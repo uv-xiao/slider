@@ -64,3 +64,18 @@ Recommended approach:
 References:
 - `references/consistency-protocol.md`
 - `references/pipeline-notes.md`
+
+## Completion behavior (required)
+
+When this skill is triggered:
+
+1. **Do only this step**: render the artifacts the user explicitly requested (images / PDF / image-PPTX).
+2. **Do not invoke other skills automatically** (e.g. `$pptx` for editable PPTX) unless explicitly requested.
+3. **End your response with recommended next steps** (options + commands to run next).
+
+Recommended next steps (include this block in your response):
+
+- **Outputs**: point to the workdir and final artifact paths.
+- **Iterate cheaply** (after editing `prompts/styled/<deck>.md`):
+  - `OPENROUTER_API_KEY=... python3 .codex/skills/styled-artifacts/scripts/styled_prompts_to_artifacts.py --prompts prompts/styled/<deck>.md --workdir artifacts/<deck>/work --reuse-workdir --only 7`
+- **Editable PPTX** (if requested): invoke `$pptx` and follow `.codex/skills/pptx/html2pptx.md`.
