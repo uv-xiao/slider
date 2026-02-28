@@ -24,13 +24,14 @@
   - 禁止：照片风格大图、杂乱拼贴、无意义装饰。
 - Language: 全中文；项目名/会议名允许保留英文缩写（MLIR, e-graph, RTL, HLS）。
 - Guardrails: 不加页码/水印/Logo（除非作为“来源标签”）。
+- Debug/坐标禁令：**绝对禁止**在画面中绘制任何布局调试信息（bbox 边框、角标、坐标/百分比文字）。例如不得出现“7%x,10%y / 93%x,48%y / 20% / 60% / 86%”等。`bbox` 仅用于内部布局推理，不能作为可见内容。
 
 ## Slide 1: 奋进奖学金答辩｜把协同优化做成工具链能力
 
 Layout decision:
 - 纯封面：左上大标题 + 左下身份信息 + 右下“一句话主线”；右侧放一个极简“Chip-Compiler-Toolchain”图标组作为视觉锚点。
 
-Element spec (bbox in %, x,y,w,h; top-left origin):
+Element spec（bbox 仅用于布局，不可见；不要画 bbox 框/坐标角标）:
 - id: bg
   type: shape
   bbox: 0,0,100,100
@@ -72,6 +73,7 @@ Element spec (bbox in %, x,y,w,h; top-left origin):
 
 Rendering notes:
 - 保持留白与高级感；不要堆文字。
+- 禁止出现任何坐标/百分比角标、bbox 边框或调试文字。
 
 Assets:
 - none
@@ -709,6 +711,9 @@ Element spec:
     以开源协同汇聚社区力量，以校企合作验证闭环推动技术转化，为我国高能效计算与芯片设计方法体系建设贡献长期力量。
   style: pull_quote block; left 6px blue bar (#2563EB); fill #FFFFFF; border 1.5px #D1D5DB; radius 14px; text #1A1A1A.
 
+Rendering notes:
+- 禁止出现任何坐标/百分比角标、bbox 边框或调试文字。
+- 证据墙与时间线保持“杂志信息图”克制：图标小、信息密度高但不拥挤；优先对齐与留白。
+
 Assets:
 - none
-
